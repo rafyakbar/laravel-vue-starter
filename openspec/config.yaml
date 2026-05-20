@@ -1,0 +1,60 @@
+schema: spec-driven
+
+context: |
+  Project: Laravel Vue Shadcn Starter
+  Goal: Build a full-featured SPA admin panel starter template using shadcn-vue as the UI framework.
+
+  Tech Stack (Target):
+  - Backend: Laravel 13, PHP 8.4
+  - Frontend: Vue 3 (Composition API + script setup), TypeScript, Vite 8
+  - UI Framework: shadcn-vue (Radix Vue primitives + Tailwind CSS 4 + class-variance-authority)
+  - Icons: Lucide Vue Next
+  - State: Pinia 3
+  - Router: Vue Router 5
+  - Auth Backend: Laravel Fortify (headless, views disabled) + Laravel Sanctum (cookie-based SPA)
+  - Authorization: Silber Bouncer (roles & abilities)
+  - Media: Spatie Laravel MediaLibrary
+  - Testing: Pest 4
+
+  Architecture:
+  - SPA with catch-all route (SpaController serves single Blade entry point)
+  - Vue handles all routing via Vue Router
+  - Laravel serves JSON API only (no Blade views except entry point)
+  - Cookie-based auth via Sanctum stateful middleware
+  - Service layer pattern: Controller → Service → Model
+  - Frontend services extend BaseService/ModelService for API calls
+  - Dark mode via class strategy on <html> element
+
+  Current State:
+  - Fresh Laravel 13 skeleton (no Vue, no auth packages yet)
+  - Tailwind CSS 4 + Vite 8 already installed
+  - SQLite database configured
+  - Pest 4 for testing
+
+  Conventions:
+  - Frontend source in resources/app/ (not resources/js/)
+  - Vite alias @ points to resources/app/
+  - Services use TypeScript (.ts)
+  - Vue components use .vue with script setup
+  - Pinia stores in resources/app/stores/
+  - API services in resources/app/services/
+  - shadcn-vue components in resources/app/components/ui/
+  - Reusable app components in resources/app/components/
+  - Pages organized by auth/private/shared in resources/app/views/pages/
+
+rules:
+  proposal:
+    - Keep proposals focused on one logical unit of work
+    - Specify which npm/composer packages are needed with versions
+    - Explain the "why" clearly
+  specs:
+    - Use Given/When/Then format for scenarios
+    - Keep requirements verifiable and testable
+  design:
+    - Include file paths for all new files to be created
+    - Specify exact package versions where critical
+    - Show configuration snippets for key setup files
+  tasks:
+    - Break tasks into chunks that can be completed in under 30 minutes
+    - Group by backend/frontend when both are involved
+    - Include verification steps (build check, test run)
