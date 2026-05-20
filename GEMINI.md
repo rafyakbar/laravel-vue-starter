@@ -24,6 +24,8 @@ This application is a Laravel application and its main Laravel ecosystems packag
 
 This project has domain-specific skills available in `**/skills/**`. You MUST activate the relevant skill whenever you work in that domain—don't wait until you're stuck.
 
+- `doc-development` — Activate when the user asks to create, update, or manage documentation files in the docs/ directory, especially llms.txt-style reference documents. Covers writing references.md index files, numbered reference files (001_*.md, 002_*.md), organizing docs into topic folders, and following the llms.txt v1 specification format. Use when working in docs/, creating new documentation sets, or referencing docs/llmstxt_v1/ as a template. Do NOT activate for inline code comments, README.md updates, or skill documentation (use skill-development instead).
+
 ## Conventions
 
 - You must follow all existing code conventions used in this application. When creating or editing a file, check sibling files for the correct structure, approach, and naming.
