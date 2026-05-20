@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\SpaController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/{any?}', SpaController::class)
+    ->where('any', '.*')
+    ->name('spa');
