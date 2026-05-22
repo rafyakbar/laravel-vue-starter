@@ -10,21 +10,22 @@ The Laravel Boost guidelines are specifically curated by Laravel maintainers for
 This application is a Laravel application and its main Laravel ecosystems package & versions are below. You are an expert with them all. Ensure you abide by these specific packages & versions.
 
 - php - 8.4
+- laravel/fortify (FORTIFY) - v1
 - laravel/framework (LARAVEL) - v13
 - laravel/prompts (PROMPTS) - v0
+- laravel/sanctum (SANCTUM) - v4
 - laravel/boost (BOOST) - v2
 - laravel/mcp (MCP) - v0
 - laravel/pail (PAIL) - v1
 - laravel/pint (PINT) - v1
 - pestphp/pest (PEST) - v4
 - phpunit/phpunit (PHPUNIT) - v12
+- vue (VUE) - v3
 - tailwindcss (TAILWINDCSS) - v4
 
 ## Skills Activation
 
 This project has domain-specific skills available in `**/skills/**`. You MUST activate the relevant skill whenever you work in that domain—don't wait until you're stuck.
-
-- `doc-development` — Activate when the user asks to create, update, or manage documentation files in the docs/ directory, especially llms.txt-style reference documents. Covers writing references.md index files, numbered reference files (001_*.md, 002_*.md), organizing docs into topic folders, and following the llms.txt v1 specification format. Use when working in docs/, creating new documentation sets, or referencing docs/llmstxt_v1/ as a template. Do NOT activate for inline code comments, README.md updates, or skill documentation (use skill-development instead).
 
 ## Conventions
 
