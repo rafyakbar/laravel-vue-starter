@@ -7,7 +7,9 @@
         "boost:mcp"
       ],
       "autoApprove": [
-        "search-docs"
+        "search-docs",
+        "database-schema",
+        "application-info"
       ]
     }
   }
