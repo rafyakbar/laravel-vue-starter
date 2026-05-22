@@ -97,6 +97,11 @@ const onSubmit = handleSubmit(async (values) => {
                 Sign up
               </router-link>
             </p>
+            <p>
+              <router-link :to="{ name: 'home' }" class="text-[var(--muted-foreground)] hover:underline">
+                ← Back to home
+              </router-link>
+            </p>
           </div>
         </CardContent>
       </Card>

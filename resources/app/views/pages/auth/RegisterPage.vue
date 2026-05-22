@@ -131,11 +131,16 @@ const onSubmit = handleSubmit(async (values) => {
             </Button>
           </form>
 
-          <div class="mt-4 text-center text-sm">
+          <div class="mt-4 text-center text-sm space-y-2">
             <p class="text-[var(--muted-foreground)]">
               Already have an account?
               <router-link :to="{ name: 'login' }" class="text-[var(--primary)] hover:underline">
                 Sign in
+              </router-link>
+            </p>
+            <p>
+              <router-link :to="{ name: 'home' }" class="text-[var(--muted-foreground)] hover:underline">
+                ← Back to home
               </router-link>
             </p>
           </div>

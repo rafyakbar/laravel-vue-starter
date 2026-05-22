@@ -26,6 +26,6 @@ The backend auth system (Fortify + Sanctum + Spatie Permission) is fully impleme
 
 - **New dependencies (npm)**: `vee-validate ^4.15`
 - **New files**: ~15 files (services, store, pages, router updates, shadcn-vue components)
-- **Modified files**: `resources/app/router/index.ts` (add routes + guards), `resources/app/main.ts` (no change expected), `resources/app/App.vue` (no change expected)
+- **Modified files**: `resources/app/router/index.ts` (add routes + guards), `resources/app/main.ts` (install router after fetchUser), `resources/app/views/pages/HomePage.vue` (conditional auth navigation)
 - **Backend changes**: None — all Fortify/Sanctum endpoints already exist and are tested
 - **shadcn-vue components needed**: Button, Input, Card, Form (FormField, FormItem, FormLabel, FormControl, FormMessage), Label

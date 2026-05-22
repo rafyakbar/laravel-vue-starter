@@ -26,7 +26,10 @@ async function handleLogout() {
           Welcome, {{ authStore.user?.name }}
         </p>
 
-        <div class="mt-8">
+        <div class="mt-8 flex items-center justify-center gap-4">
+          <router-link :to="{ name: 'home' }">
+            <Button variant="ghost">← Home</Button>
+          </router-link>
           <Button variant="outline" :disabled="loggingOut" @click="handleLogout">
             {{ loggingOut ? 'Signing out...' : 'Sign Out' }}
           </Button>

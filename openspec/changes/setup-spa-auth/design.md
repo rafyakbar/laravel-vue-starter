@@ -93,8 +93,11 @@ export const useAuthStore = defineStore('auth', () => {
 { path: '/forgot-password', component: () => import('@/views/pages/auth/ForgotPasswordPage.vue'), meta: { guest: true } }
 { path: '/reset-password', component: () => import('@/views/pages/auth/ResetPasswordPage.vue'), meta: { guest: true } }
 
+// Public route (no auth requirement)
+{ path: '/', component: HomePage }  // Shows login/signup for guests, admin link for authenticated
+
 // Protected routes (requiresAuth)
-{ path: '/', component: () => import('@/views/pages/HomePage.vue'), meta: { requiresAuth: true } }
+{ path: '/admin', component: () => import('@/views/pages/admin/AdminPage.vue'), meta: { requiresAuth: true } }
 ```
 
 ### 5. Form handling with vee-validate (no Zod)
@@ -160,20 +163,24 @@ export interface RegisterPayload {
 ```
 resources/app/
 ├── services/
-│   └── api.ts                         # Fetch wrapper with Sanctum support
+│   └── api.ts                         # Fetch wrapper with Sanctum support + X-XSRF-TOKEN header
 ├── stores/
 │   ├── index.ts                       # (existing, re-export createPinia)
-│   └── auth.ts                        # Auth store
+│   └── auth.ts                        # Auth store (uses direct router import, not useRouter)
 ├── types/
 │   └── auth.ts                        # Auth-related TypeScript interfaces
 ├── router/
 │   ├── index.ts                       # (modified — add routes + guard setup)
 │   └── guards.ts                      # Navigation guard logic
-├── views/pages/auth/
-│   ├── LoginPage.vue                  # Login form
-│   ├── RegisterPage.vue               # Registration form
-│   ├── ForgotPasswordPage.vue         # Request reset link form
-│   └── ResetPasswordPage.vue          # Reset password form (with token from URL)
+├── views/pages/
+│   ├── HomePage.vue                   # Public landing — login/signup or admin link
+│   ├── admin/
+│   │   └── AdminPage.vue              # Protected — welcome + sign out + home link
+│   └── auth/
+│       ├── LoginPage.vue              # Login form
+│       ├── RegisterPage.vue           # Registration form
+│       ├── ForgotPasswordPage.vue     # Request reset link form
+│       └── ResetPasswordPage.vue      # Reset password form (with token from URL)
 └── components/ui/                     # shadcn-vue components (generated via CLI)
     ├── button/
     ├── card/
