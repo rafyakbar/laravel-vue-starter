@@ -43,4 +43,26 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+
+    /**
+     * Indicate that the user has the admin role.
+     * Requires RolesAndPermissionsSeeder to have run first.
+     */
+    public function admin(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $user->assignRole('admin');
+        });
+    }
+
+    /**
+     * Indicate that the user has the regular role.
+     * Requires RolesAndPermissionsSeeder to have run first.
+     */
+    public function regular(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $user->assignRole('regular');
+        });
+    }
 }
