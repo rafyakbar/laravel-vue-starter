@@ -34,7 +34,7 @@
 
 ## 6. App Initialization
 
-- [x] 6.1 Update `resources/app/main.ts` — call `authStore.fetchUser()` before `app.mount('#app')` to restore session on page refresh
+- [x] 6.1 Update `resources/app/main.ts` — call `authStore.fetchUser()` before installing router (`app.use(router)`) and mounting, to prevent guard race condition on page refresh
 - [x] 6.2 Run `npm run build` — confirm no type errors
 
 ## 7. Auth Pages

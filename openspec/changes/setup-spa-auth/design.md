@@ -78,9 +78,9 @@ export const useAuthStore = defineStore('auth', () => {
 
 **Rationale:** Centralized, easy to reason about. Routes declare `meta: { requiresAuth: true }` or `meta: { guest: true }`. Guard redirects unauthenticated users to `/login` and authenticated users away from guest-only pages.
 
-**Session restoration:** On app init (before router is ready), call `fetchUser()`. If it returns 401, user is not authenticated — proceed to login. If it returns user data, populate store.
+**Session restoration:** On app init, call `fetchUser()` BEFORE installing the router (`app.use(router)`). This ensures the initial navigation guard already has the correct auth state. If it returns 401, user is not authenticated — proceed to login. If it returns user data, populate store. The router is only installed after the auth state is resolved, preventing race conditions where guards run before `isAuthenticated` is populated.
 
-**File:** `resources/app/router/index.ts` (updated), `resources/app/router/guards.ts` (new)
+**File:** `resources/app/router/index.ts` (updated), `resources/app/router/guards.ts` (new), `resources/app/main.ts` (router installed after fetchUser)
 
 ### 4. Route structure with lazy-loaded auth pages
 
@@ -127,15 +127,18 @@ resources/app/views/pages/auth/
 ```typescript
 export interface User {
   id: number
-  first_name: string
-  last_name: string
-  middle_name: string | null
+  name: string
+  username: string
   email: string
+  email_verified_at: string | null
   avatar_url: string | null
   avatar_thumb_url: string | null
   is_admin: boolean
+  is_owner: boolean
   roles: string[]
   permissions: string[]
+  created_at: string | null
+  updated_at: string | null
 }
 
 export interface LoginPayload {
@@ -181,8 +184,8 @@ resources/app/
 
 ## Risks / Trade-offs
 
-- **[Risk] CSRF cookie timing** — If the CSRF cookie expires or is missing, API calls fail silently. → Mitigation: `getCsrfCookie()` is called before login/register. On 419 response (CSRF mismatch), auto-retry after re-fetching cookie.
-- **[Risk] Race condition on page refresh** — If the router guard fires before `fetchUser()` completes, user gets redirected to login even though they're authenticated. → Mitigation: Call `fetchUser()` in `main.ts` before mounting the app. Use a `loading` state to prevent rendering until auth check completes.
+- **[Risk] CSRF cookie timing** — If the CSRF cookie expires or is missing, API calls fail silently. → Mitigation: `getCsrfCookie()` is called before login/register. The `api()` wrapper reads the `XSRF-TOKEN` cookie and sends it as the `X-XSRF-TOKEN` header on every request.
+- **[Risk] Race condition on page refresh** — If the router guard fires before `fetchUser()` completes, user gets redirected to login even though they're authenticated. → Mitigation: Install the router (`app.use(router)`) AFTER `fetchUser()` resolves in `main.ts`. This guarantees the first navigation guard execution has the correct `isAuthenticated` state.
 - **[Risk] shadcn-vue CLI may not generate components cleanly with reka-ui** — Mitigation: Verify CLI output after generation. If issues arise, manually adjust imports.
 - **[Trade-off] No "loading skeleton" for auth check** — User sees a blank screen briefly on page refresh while `fetchUser()` runs. Acceptable for starter kit; can add loading indicator later.
 - **[Trade-off] No persistent "remember me"** — Sanctum session lifetime (120 min default) controls this. No UI toggle needed for MVP.
