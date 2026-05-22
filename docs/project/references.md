@@ -24,6 +24,7 @@ This project is an SPA admin dashboard built with Laravel 13 (backend) and Vue 3
 - [006_backend_guidelines.md](references/006_backend_guidelines.md): Backend standards, services, and business logic
 - [007_authentication.md](references/007_authentication.md): Authentication, authorization, roles, and permissions
 - [008_deployment.md](references/008_deployment.md): Deployment guide and environment/server configuration
+- [009_performance.md](references/009_performance.md): Performance optimization for local development and production
 
 ## Links
 
