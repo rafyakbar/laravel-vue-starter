@@ -7,6 +7,11 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomePage,
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: () => import('@/views/pages/admin/AdminPage.vue'),
     meta: { requiresAuth: true },
   },
   {

@@ -56,7 +56,7 @@ export const useAuthStore = defineStore('auth', () => {
   async function logout(): Promise<void> {
     await apiPost('/logout')
     user.value = null
-    router.push({ name: 'login' })
+    router.push({ name: 'home' })
   }
 
   return {

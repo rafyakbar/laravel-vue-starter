@@ -27,7 +27,7 @@ const onSubmit = handleSubmit(async (values) => {
   submitting.value = true
   try {
     await authStore.login(values)
-    const redirect = (route.query.redirect as string) || '/'
+    const redirect = (route.query.redirect as string) || '/admin'
     router.push(redirect)
   } catch (error) {
     if (error instanceof ApiError && error.status === 422) {
