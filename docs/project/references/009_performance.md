@@ -8,12 +8,16 @@ Laravel applications on Windows (Laragon) can exhibit unexpectedly slow response
 
 ## Target Metrics
 
-| Environment | Target Response Time |
-|-------------|---------------------|
-| Local dev (simple API) | < 100ms |
-| Local dev (auth endpoints) | < 200ms |
-| Production (simple API) | < 50ms |
-| Production (auth endpoints) | < 100ms |
+| Environment | Endpoint Type | Target Response Time |
+|-------------|---------------|---------------------|
+| Local dev | Simple API (GET) | < 100ms |
+| Local dev | Session endpoints (logout, csrf) | < 150ms |
+| Local dev | Auth with bcrypt (login, register) | < 350ms (bcrypt limited) |
+| Production | Simple API (GET) | < 50ms |
+| Production | Session endpoints | < 80ms |
+| Production | Auth with bcrypt (login, register) | < 250ms (bcrypt limited) |
+
+Note: Login and register endpoints are inherently slower due to bcrypt password hashing (~180ms at cost 12). This is by design for security.
 
 ## PHP OPcache (Critical)
 
@@ -149,6 +153,71 @@ realpath_cache_size=8192K
 realpath_cache_ttl=600
 ```
 
+## Bcrypt Password Hashing (Expected Overhead)
+
+After enabling OPcache and optimizing drivers, you may notice that `/login` (~300ms) and `/register` (~450ms) remain above 200ms while other endpoints are fast (60-120ms). This is not a bug — it is the intentional cost of bcrypt password hashing.
+
+### Why Login and Register Are Slower
+
+Both endpoints perform bcrypt operations:
+- `/login`: calls `password_verify()` to check credentials against stored hash
+- `/register`: calls `password_hash()` to hash the new password before storing
+
+Bcrypt is deliberately slow to resist brute-force attacks. The "cost factor" (rounds) controls the time exponentially.
+
+### Benchmark: Bcrypt Cost Factor vs Time (i9-13900H)
+
+| Cost Factor | Hash Time | Verify Time | Use Case |
+|-------------|-----------|-------------|----------|
+| 10 | ~45ms | ~45ms | Acceptable for local development |
+| 11 | ~90ms | ~90ms | Balanced |
+| 12 (default) | ~186ms | ~178ms | Production standard (Laravel default) |
+| 13 | ~370ms | ~370ms | High security |
+
+### Request Time Breakdown
+
+```text
+POST /login (~300ms):
+  └── Laravel boot + middleware:  ~60ms
+  └── DB query (find user):       ~5ms
+  └── password_verify (cost 12): ~180ms
+  └── Session write + response:   ~55ms
+
+POST /register (~450ms):
+  └── Laravel boot + middleware:  ~60ms
+  └── Validation:                 ~10ms
+  └── password_hash (cost 12):   ~186ms
+  └── DB inserts (user + role):   ~80ms
+  └── Event dispatching:          ~50ms
+  └── Session write + response:   ~60ms
+```
+
+### Configuration
+
+Laravel reads the bcrypt rounds from `config/hashing.php` which defaults to the `BCRYPT_ROUNDS` env variable:
+
+```env
+# .env
+BCRYPT_ROUNDS=12
+```
+
+### Should You Lower It for Development?
+
+You can set `BCRYPT_ROUNDS=10` in your local `.env` to reduce login/register time by ~130ms. However:
+
+- Users registered with cost 10 have different hashes than cost 12
+- If you seed your database with cost 10, those passwords still work with cost 12 (bcrypt stores the cost in the hash itself)
+- Never deploy with cost below 12
+
+```env
+# Local development only — saves ~130ms on auth endpoints
+BCRYPT_ROUNDS=10
+```
+
+### Important: This Is Not a Performance Problem
+
+The bcrypt overhead is a security feature, not a defect. Response times of 300-450ms for login/register are normal and expected with cost 12. All other endpoints (API reads, session checks, CSRF) should be under 100ms after OPcache + file drivers are configured.
+
 ## Database Query Performance
 
 ### N+1 Prevention
@@ -225,6 +294,7 @@ php artisan tinker --execute "echo round((microtime(true) - LARAVEL_START) * 100
 5. **Antivirus exclusions?** — Exclude project and PHP directories
 6. **Slow queries?** — Enable query log or use Telescope
 7. **N+1 queries?** — Enable `preventLazyLoading()` in dev
+8. **Bcrypt cost?** — Login/register always add ~180ms at cost 12 — this is normal, not a bug
 
 ## Best Practices
 
