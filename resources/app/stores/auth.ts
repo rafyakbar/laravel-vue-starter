@@ -1,12 +1,10 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { useRouter } from 'vue-router'
+import router from '@/router'
 import type { User, LoginPayload, RegisterPayload } from '@/types/auth'
 import { apiGet, apiPost, getCsrfCookie, ApiError } from '@/services/api'
 
 export const useAuthStore = defineStore('auth', () => {
-  const router = useRouter()
-
   const user = ref<User | null>(null)
   const loading = ref(false)
 
