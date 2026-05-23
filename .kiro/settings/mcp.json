@@ -10,7 +10,8 @@
         "search-docs",
         "database-schema",
         "application-info",
-        "read-log-entries"
+        "read-log-entries",
+        "get-absolute-url"
       ]
     }
   }
