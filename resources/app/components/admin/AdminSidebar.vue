@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
+import { useI18n } from '@/composables/useI18n'
 import { navItems } from '@/components/admin/nav-items'
 import {
   Sidebar,
@@ -33,11 +34,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { ChevronRight, ChevronUp, User } from 'lucide-vue-next'
+import { ChevronRight, ChevronUp, Globe, LogOut, User } from 'lucide-vue-next'
 
 const route = useRoute()
-const router = useRouter()
 const authStore = useAuthStore()
+const { t } = useI18n()
 
 /** Open state for collapsible groups (keyed by routeName) */
 const openGroups = ref<Record<string, boolean>>({ 'admin.users': true })
@@ -77,7 +78,7 @@ async function handleLogout() {
               </div>
               <div class="grid flex-1 text-left text-sm leading-tight">
                 <span class="truncate font-semibold">Admin Panel</span>
-                <span class="truncate text-xs text-muted-foreground">Dashboard</span>
+                <span class="truncate text-xs text-muted-foreground">{{ t('nav.dashboard') }}</span>
               </div>
             </router-link>
           </SidebarMenuButton>
@@ -87,8 +88,9 @@ async function handleLogout() {
 
     <!-- Content: Navigation -->
     <SidebarContent>
+      <!-- Main navigation group -->
       <SidebarGroup>
-        <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+        <SidebarGroupLabel>{{ t('nav.menu') }}</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
             <template v-for="item in navItems" :key="item.routeName">
@@ -101,7 +103,7 @@ async function handleLogout() {
                   <CollapsibleTrigger as-child>
                     <SidebarMenuButton :is-active="isGroupActive(item.children)">
                       <component :is="item.icon" />
-                      <span>{{ item.title }}</span>
+                      <span>{{ t(`nav.${item.i18nKey}` as any) }}</span>
                       <ChevronRight class="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
@@ -111,7 +113,7 @@ async function handleLogout() {
                         <SidebarMenuSubButton as-child :is-active="isActive(child.routeName)">
                           <router-link :to="{ name: child.routeName }">
                             <component :is="child.icon" />
-                            <span>{{ child.title }}</span>
+                            <span>{{ t(`nav.${child.i18nKey}` as any) }}</span>
                           </router-link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
@@ -125,12 +127,28 @@ async function handleLogout() {
                 <SidebarMenuButton as-child :is-active="isActive(item.routeName)">
                   <router-link :to="{ name: item.routeName }">
                     <component :is="item.icon" />
-                    <span>{{ item.title }}</span>
+                    <span>{{ t(`nav.${item.i18nKey}` as any) }}</span>
                   </router-link>
                 </SidebarMenuButton>
                 <SidebarMenuBadge v-if="item.badge">{{ item.badge }}</SidebarMenuBadge>
               </SidebarMenuItem>
             </template>
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+
+      <!-- Site link group (pinned to bottom of content area, above footer) -->
+      <SidebarGroup class="mt-auto">
+        <SidebarGroupContent>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton :tooltip="t('nav.site')" as-child>
+                <router-link :to="{ name: 'home' }">
+                  <Globe />
+                  <span>{{ t('nav.site') }}</span>
+                </router-link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
@@ -159,12 +177,13 @@ async function handleLogout() {
               <DropdownMenuItem as-child>
                 <router-link :to="{ name: 'admin.profile' }">
                   <User class="mr-2 size-4" />
-                  <span>Profile</span>
+                  <span>{{ t('nav.profile') }}</span>
                 </router-link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem @click="handleLogout">
-                <span>Sign Out</span>
+                <LogOut class="mr-2 size-4" />
+                <span>{{ t('nav.signOut') }}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

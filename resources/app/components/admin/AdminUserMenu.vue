@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth'
+import { useI18n } from '@/composables/useI18n'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,9 +9,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { User } from 'lucide-vue-next'
+import { LogOut, User } from 'lucide-vue-next'
 
 const authStore = useAuthStore()
+const { t } = useI18n()
 
 function userInitials(name: string): string {
   return name
@@ -44,12 +46,13 @@ async function handleLogout() {
       <DropdownMenuItem as-child>
         <router-link :to="{ name: 'admin.profile' }">
           <User class="mr-2 size-4" />
-          <span>Profile</span>
+          <span>{{ t('nav.profile') }}</span>
         </router-link>
       </DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuItem @click="handleLogout">
-        <span>Sign Out</span>
+        <LogOut class="mr-2 size-4" />
+        <span>{{ t('nav.signOut') }}</span>
       </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
