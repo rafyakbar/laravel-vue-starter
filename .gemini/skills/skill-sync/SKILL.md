@@ -46,18 +46,13 @@ All of these must contain identical copies of every shared skill:
 .agent/skills/
 .agents/skills/
 .claude/skills/
-.codebuddy/skills/
 .codex/skills/
 .cursor/skills/
-.forge/skills/
 .gemini/skills/
 .github/skills/
-.iflow/skills/
 .junie/skills/
-.kilocode/skills/
 .kiro/skills/
 .opencode/skills/
-.qoder/skills/
 .qwen/skills/
 .trae/skills/
 .windsurf/skills/
@@ -75,9 +70,9 @@ List the contents of:
 
 Create a table showing which skills exist where:
 
-| Skill | skills/ | .agent | .agents | .claude | .codebuddy | .codex | .cursor | .forge | .gemini | .github | .iflow | .junie | .kilocode | .kiro | .opencode | .qoder | .qwen | .trae | .windsurf |
-|-------|---------|--------|---------|---------|------------|--------|---------|--------|---------|---------|--------|--------|-----------|-------|-----------|--------|-------|-------|-----------|
-| skill-a | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Skill | skills/ | .agent | .agents | .claude | .codex | .cursor | .gemini | .github | .junie | .kiro | .opencode | .qwen | .trae | .windsurf |
+|-------|---------|--------|---------|---------|--------|---------|---------|---------|--------|-------|-----------|-------|-------|-----------|
+| skill-a | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 
 ### Step 3 — Identify Discrepancies
 
@@ -115,7 +110,7 @@ Run a hash comparison to confirm all copies are identical:
 ```powershell
 # PowerShell: Compare hashes for a specific skill
 $skill = "skill-name"
-$agents = @('.agent','.agents','.claude','.codebuddy','.codex','.cursor','.forge','.gemini','.github','.iflow','.junie','.kilocode','.kiro','.opencode','.qoder','.qwen','.trae','.windsurf')
+$agents = @('.agent','.agents','.claude','.codex','.cursor','.gemini','.github','.junie','.kiro','.opencode','.qwen','.trae','.windsurf')
 $sourceHash = (Get-FileHash "skills/$skill/SKILL.md").Hash
 foreach ($agent in $agents) {
     $path = "$agent/skills/$skill/SKILL.md"
@@ -134,7 +129,7 @@ foreach ($agent in $agents) {
 To force-sync ALL skills from root to all agent folders:
 
 ```powershell
-$agents = @('.agent','.agents','.claude','.codebuddy','.codex','.cursor','.forge','.gemini','.github','.iflow','.junie','.kilocode','.kiro','.opencode','.qoder','.qwen','.trae','.windsurf')
+$agents = @('.agent','.agents','.claude','.codex','.cursor','.gemini','.github','.junie','.kiro','.opencode','.qwen','.trae','.windsurf')
 $skills = Get-ChildItem "skills" -Directory
 foreach ($skill in $skills) {
     foreach ($agent in $agents) {

@@ -39,18 +39,13 @@ All of these folders contain a `skills/` subdirectory and must receive shared sk
 .agent/skills/
 .agents/skills/
 .claude/skills/
-.codebuddy/skills/
 .codex/skills/
 .cursor/skills/
-.forge/skills/
 .gemini/skills/
 .github/skills/
-.iflow/skills/
 .junie/skills/
-.kilocode/skills/
 .kiro/skills/
 .opencode/skills/
-.qoder/skills/
 .qwen/skills/
 .trae/skills/
 .windsurf/skills/
@@ -143,18 +138,13 @@ Copy the skill folder to every agent's skills directory:
 .agent/skills/<skill-name>/SKILL.md
 .agents/skills/<skill-name>/SKILL.md
 .claude/skills/<skill-name>/SKILL.md
-.codebuddy/skills/<skill-name>/SKILL.md
 .codex/skills/<skill-name>/SKILL.md
 .cursor/skills/<skill-name>/SKILL.md
-.forge/skills/<skill-name>/SKILL.md
 .gemini/skills/<skill-name>/SKILL.md
 .github/skills/<skill-name>/SKILL.md
-.iflow/skills/<skill-name>/SKILL.md
 .junie/skills/<skill-name>/SKILL.md
-.kilocode/skills/<skill-name>/SKILL.md
 .kiro/skills/<skill-name>/SKILL.md
 .opencode/skills/<skill-name>/SKILL.md
-.qoder/skills/<skill-name>/SKILL.md
 .qwen/skills/<skill-name>/SKILL.md
 .trae/skills/<skill-name>/SKILL.md
 .windsurf/skills/<skill-name>/SKILL.md
@@ -307,18 +297,13 @@ Before finalizing any skill creation, update, or rename, complete ALL items:
 - [ ] Copied to `.agent/skills/<name>/SKILL.md`
 - [ ] Copied to `.agents/skills/<name>/SKILL.md`
 - [ ] Copied to `.claude/skills/<name>/SKILL.md`
-- [ ] Copied to `.codebuddy/skills/<name>/SKILL.md`
 - [ ] Copied to `.codex/skills/<name>/SKILL.md`
 - [ ] Copied to `.cursor/skills/<name>/SKILL.md`
-- [ ] Copied to `.forge/skills/<name>/SKILL.md`
 - [ ] Copied to `.gemini/skills/<name>/SKILL.md`
 - [ ] Copied to `.github/skills/<name>/SKILL.md`
-- [ ] Copied to `.iflow/skills/<name>/SKILL.md`
 - [ ] Copied to `.junie/skills/<name>/SKILL.md`
-- [ ] Copied to `.kilocode/skills/<name>/SKILL.md`
 - [ ] Copied to `.kiro/skills/<name>/SKILL.md`
 - [ ] Copied to `.opencode/skills/<name>/SKILL.md`
-- [ ] Copied to `.qoder/skills/<name>/SKILL.md`
 - [ ] Copied to `.qwen/skills/<name>/SKILL.md`
 - [ ] Copied to `.trae/skills/<name>/SKILL.md`
 - [ ] Copied to `.windsurf/skills/<name>/SKILL.md`
