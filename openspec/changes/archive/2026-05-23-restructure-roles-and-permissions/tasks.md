@@ -176,22 +176,22 @@ When superadmin/admin land here (e.g. by clicking Site link), they need Go to Ad
 
 Run `php artisan migrate:fresh --seed` first to ensure clean DB.
 
-- [ ] 20.1 **Unauthenticated** visit `/` → see Sign In + Sign Up buttons
-- [ ] 20.2 **Unauthenticated** visit `/admin` → redirect to `/login?redirect=/admin`
-- [ ] 20.3 **Unauthenticated** visit `/profile` → redirect to `/login?redirect=/profile`
-- [ ] 20.4 **Unauthenticated** visit `/login` → see login form
-- [ ] 20.5 **Login as user** (`username=user1`, password from seeder) → redirect to `/`, see avatar + Profile + Sign Out (NO Go to Admin)
-- [ ] 20.6 **As user** click Profile → opens `/profile` with `DefaultLayout` (no sidebar)
-- [ ] 20.7 **As user** visit `/admin` directly → redirect to `/`
-- [ ] 20.8 **As user** click Sign Out from `/profile` → logged out, see Sign In/Sign Up
-- [ ] 20.9 **Login as admin** (`username=admin`, password=`123123`) → redirect to `/admin`, sidebar Settings menu **NOT visible** (admin doesn't have view-users)
-- [ ] 20.10 **As admin** visit `/` → see avatar + Go to Admin + Profile + Sign Out
-- [ ] 20.11 **As admin** click Profile → opens `/profile` inside `AdminLayout` (sidebar visible)
-- [ ] 20.12 **Login as superadmin** (`username=superadmin`, password=`123123`) → redirect to `/admin`, sidebar Settings menu **visible** (superadmin has all permissions)
-- [ ] 20.13 **As superadmin** visit `/` → see avatar + Go to Admin + Profile + Sign Out
-- [ ] 20.14 **As superadmin** click Profile → opens `/profile` inside `AdminLayout`
-- [ ] 20.15 **As superadmin** click `/admin/users` → page renders (has view-users permission)
-- [ ] 20.16 **Register a new account** publicly → redirect to `/`, role assigned is `user`, can access `/profile` but NOT `/admin`
+- [x] 20.1 **Unauthenticated** visit `/` → see Sign In + Sign Up buttons
+- [x] 20.2 **Unauthenticated** visit `/admin` → redirect to `/login?redirect=/admin`
+- [x] 20.3 **Unauthenticated** visit `/profile` → redirect to `/login?redirect=/profile`
+- [x] 20.4 **Unauthenticated** visit `/login` → see login form
+- [x] 20.5 **Login as user** (`username=user1`, password from seeder) → redirect to `/`, see avatar + Profile + Sign Out (NO Go to Admin)
+- [x] 20.6 **As user** click Profile → opens `/profile` with `DefaultLayout` (no sidebar)
+- [x] 20.7 **As user** visit `/admin` directly → redirect to `/`
+- [x] 20.8 **As user** click Sign Out from `/profile` → logged out, see Sign In/Sign Up
+- [x] 20.9 **Login as admin** (`username=admin`, password=`123123`) → redirect to `/admin`, sidebar Settings menu **NOT visible** (admin doesn't have view-users)
+- [x] 20.10 **As admin** visit `/` → see avatar + Go to Admin + Profile + Sign Out
+- [x] 20.11 **As admin** click Profile → opens `/profile` inside `AdminLayout` (sidebar visible)
+- [x] 20.12 **Login as superadmin** (`username=superadmin`, password=`123123`) → redirect to `/admin`, sidebar Settings menu **visible** (superadmin has all permissions)
+- [x] 20.13 **As superadmin** visit `/` → see avatar + Go to Admin + Profile + Sign Out
+- [x] 20.14 **As superadmin** click Profile → opens `/profile` inside `AdminLayout`
+- [x] 20.15 **As superadmin** click `/admin/users` → page renders (has view-users permission)
+- [x] 20.16 **Register a new account** publicly → redirect to `/`, role assigned is `user`, can access `/profile` but NOT `/admin`
 
 ## 21. Frontend — Granular Per-Page Permission Guards
 
@@ -206,9 +206,9 @@ declare its own required permission.
   - `/admin/users`: `view-users` (only superadmin)
   - `/admin/roles`: `view-roles` (only superadmin)
 - [x] 21.2 Run `npm run build` — confirm no type errors
-- [ ] 21.3 Manual: login as admin → visit `/admin/users` directly → redirected to home (or `/admin/dashboard`)
-- [ ] 21.4 Manual: login as admin → visit `/admin/roles` directly → redirected
-- [ ] 21.5 Manual: login as superadmin → both pages accessible
+- [x] 21.3 Manual: login as admin → visit `/admin/users` directly → redirected to home (or `/admin/dashboard`)
+- [x] 21.4 Manual: login as admin → visit `/admin/roles` directly → redirected
+- [x] 21.5 Manual: login as superadmin → both pages accessible
 
 ## 22. Frontend — Improve Guard Redirect for Admin Sub-Page Denials
 
@@ -220,5 +220,5 @@ to `/` (home) is jarring — they're still in the admin context. Better: redirec
   - If user has `access-admin-panel` permission → redirect to `{ name: 'admin.dashboard' }`
   - Otherwise → redirect to `{ name: 'home' }`
 - [x] 22.2 Run `npm run build`
-- [ ] 22.3 Manual: login as admin → visit `/admin/users` → redirected to `/admin/dashboard`
-- [ ] 22.4 Manual: login as user → visit `/admin/users` → redirected to `/` (home)
+- [x] 22.3 Manual: login as admin → visit `/admin/users` → redirected to `/admin/dashboard`
+- [x] 22.4 Manual: login as user → visit `/admin/users` → redirected to `/` (home)

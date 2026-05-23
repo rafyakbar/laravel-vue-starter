@@ -1,4 +1,4 @@
-## ADDED Requirements
+## Requirements
 
 ### Requirement: Test infrastructure uses RefreshDatabase
 The test suite SHALL use `RefreshDatabase` for the `Feature` directory and run against an in-memory SQLite database for fast, isolated test runs.
@@ -12,28 +12,37 @@ The test suite SHALL use `RefreshDatabase` for the `Feature` directory and run a
 - **THEN** the database connection is `sqlite` and the database is `:memory:`
 
 ### Requirement: Reusable Pest helpers for authenticated users
-The test suite SHALL provide global helper functions in `tests/Pest.php` for common authenticated-user setup so tests can call them without duplicating code.
+The test suite SHALL provide global helper functions in `tests/Pest.php` for common authenticated-user setup so tests can call them without duplicating code. The helpers SHALL match the three-role hierarchy: `superadmin`, `admin`, `user`.
+
+#### Scenario: actingAsSuperadmin helper
+- **WHEN** a test calls `actingAsSuperadmin()`
+- **THEN** roles and permissions are seeded, a user is created and assigned the `superadmin` role
+- **AND** the test is logged in as that user via `actingAs()`
 
 #### Scenario: actingAsAdmin helper
 - **WHEN** a test calls `actingAsAdmin()`
-- **THEN** roles and permissions are seeded, an admin user is created and assigned the `admin` role
+- **THEN** roles and permissions are seeded, a user is created and assigned the `admin` role
 - **AND** the test is logged in as that user via `actingAs()`
 
-#### Scenario: actingAsRegular helper
-- **WHEN** a test calls `actingAsRegular()`
-- **THEN** roles and permissions are seeded, a regular user is created and assigned the `regular` role
+#### Scenario: actingAsUser helper
+- **WHEN** a test calls `actingAsUser()`
+- **THEN** roles and permissions are seeded, a user is created and assigned the `user` role
 - **AND** the test is logged in as that user via `actingAs()`
 
 ### Requirement: User factory states for roles
-The `UserFactory` SHALL provide `admin()` and `regular()` states so tests can create users with specific roles without manual `assignRole` calls.
+The `UserFactory` SHALL provide `superadmin()`, `admin()`, and `user()` states so tests can create users with specific roles without manual `assignRole` calls.
+
+#### Scenario: Factory superadmin state
+- **WHEN** a test calls `User::factory()->superadmin()->create()`
+- **THEN** a user is created and assigned the `superadmin` role (assuming roles are seeded first)
 
 #### Scenario: Factory admin state
 - **WHEN** a test calls `User::factory()->admin()->create()`
-- **THEN** a user is created and assigned the `admin` role (assuming roles are seeded first)
+- **THEN** a user is created and assigned the `admin` role
 
-#### Scenario: Factory regular state
-- **WHEN** a test calls `User::factory()->regular()->create()`
-- **THEN** a user is created and assigned the `regular` role (assuming roles are seeded first)
+#### Scenario: Factory user state
+- **WHEN** a test calls `User::factory()->user()->create()`
+- **THEN** a user is created and assigned the `user` role
 
 ### Requirement: Login flow tests
 The test suite SHALL include feature tests covering the login flow for both email and username, including success, failure, and rate limiting cases.
@@ -55,11 +64,11 @@ The test suite SHALL include feature tests covering the login flow for both emai
 - **THEN** the response is 429 Too Many Requests
 
 ### Requirement: Registration flow tests
-The test suite SHALL include feature tests covering registration including success, duplicate email, duplicate username, and assignment of the `regular` role.
+The test suite SHALL include feature tests covering registration including success, duplicate email, duplicate username, and assignment of the `user` role.
 
 #### Scenario: Successful registration
 - **WHEN** the test posts valid name, username, email, password, password_confirmation to `/register`
-- **THEN** the response is 201 (or 200), the user exists in the database, and the user has the `regular` role
+- **THEN** the response is 201 (or 200), the user exists in the database, and the user has the `user` role
 
 #### Scenario: Registration with duplicate email
 - **WHEN** the test posts to `/register` with an email that already exists
@@ -109,48 +118,50 @@ The test suite SHALL include a feature test covering the logout endpoint.
 - **WHEN** an authenticated user posts to `/logout`
 - **THEN** the response is successful and the user is no longer authenticated
 
-### Requirement: Authorization tests for permissions and Gate::before
-The test suite SHALL include feature tests verifying Spatie Permission RBAC behavior and the `Gate::before` super-admin bypass.
+### Requirement: Authorization tests for permissions
+The test suite SHALL include feature tests verifying Spatie Permission RBAC behavior with the three-role hierarchy.
 
-#### Scenario: Admin can perform any action via Gate::before
-- **WHEN** the test calls `$admin->can('arbitrary-permission')` for any permission name
-- **THEN** the result is `true` because `Gate::before` returns true for users with the `admin` role
+#### Scenario: Superadmin can perform any action via explicit permissions
+- **WHEN** the test calls `$superadmin->can('any-defined-permission')` for any permission name
+- **THEN** the result is `true` because superadmin holds all permissions explicitly
 
 #### Scenario: Non-admin without permission denied
-- **WHEN** the test calls `$user->can('view-users')` on a regular user without the `view-users` permission
+- **WHEN** the test calls `$user->can('view-users')` on a user without the `view-users` permission
 - **THEN** the result is `false`
 
-#### Scenario: Non-admin with permission allowed
-- **WHEN** the test calls `$user->can('edit-profile')` on a regular user (who has `edit-profile` via the `regular` role)
+#### Scenario: User with permission allowed
+- **WHEN** the test calls `$user->can('edit-profile')` on a user (who has `edit-profile` via the `user` role)
 - **THEN** the result is `true`
 
 #### Scenario: RolesAndPermissionsSeeder creates expected roles and permissions
 - **WHEN** the test runs the seeder
-- **THEN** the `admin` and `regular` roles exist
-- **AND** the `view-users`, `create-users`, `update-users`, `delete-users`, `edit-profile` permissions exist
-- **AND** the `regular` role has the `edit-profile` permission
+- **THEN** the `superadmin`, `admin`, and `user` roles exist
+- **AND** all 11 permissions exist
+- **AND** the `superadmin` role has all 11 permissions
+- **AND** the `admin` role has `access-admin-panel` and `edit-profile`
+- **AND** the `user` role has only `edit-profile`
 
 ### Requirement: User CRUD API tests
 The test suite SHALL include feature tests covering the `/api/users` resource endpoints with authorization checks.
 
-#### Scenario: Admin can list users
-- **WHEN** an admin user gets `/api/users`
+#### Scenario: Superadmin can list users
+- **WHEN** a superadmin user gets `/api/users`
 - **THEN** the response is 200 with paginated user data
 
 #### Scenario: Regular user cannot list users
-- **WHEN** a regular user gets `/api/users`
+- **WHEN** a user with `user` role gets `/api/users`
 - **THEN** the response is 403
 
-#### Scenario: Admin can create a user
-- **WHEN** an admin user posts valid user data (with roles array) to `/api/users`
+#### Scenario: Superadmin can create a user
+- **WHEN** a superadmin user posts valid user data (with roles array) to `/api/users`
 - **THEN** the response is successful and the user exists with assigned roles
 
-#### Scenario: Admin can update a user
-- **WHEN** an admin user puts updated data to `/api/users/{user}`
+#### Scenario: Superadmin can update a user
+- **WHEN** a superadmin user puts updated data to `/api/users/{user}`
 - **THEN** the response is successful and the user record is updated
 
-#### Scenario: Admin can delete a user
-- **WHEN** an admin user deletes `/api/users/{user}`
+#### Scenario: Superadmin can delete a user
+- **WHEN** a superadmin user deletes `/api/users/{user}`
 - **THEN** the response is successful and the user no longer exists
 
 #### Scenario: Unauthenticated request returns 401
@@ -161,11 +172,11 @@ The test suite SHALL include feature tests covering the `/api/users` resource en
 The test suite SHALL include feature tests for searching users by keyword and filtering by role.
 
 #### Scenario: Search users by name
-- **WHEN** an admin gets `/api/users?search=john`
+- **WHEN** a superadmin gets `/api/users?search=john`
 - **THEN** the response includes only users whose `name`, `username`, or `email` contains "john"
 
 #### Scenario: Filter users by role
-- **WHEN** an admin gets `/api/users?filters[role]=admin`
+- **WHEN** a superadmin gets `/api/users?filters[role]=admin`
 - **THEN** the response includes only users with the `admin` role
 
 ### Requirement: Avatar upload test
@@ -180,7 +191,7 @@ The test suite SHALL include a feature test for `/api/users/auth` covering authe
 
 #### Scenario: Authenticated user fetches own data
 - **WHEN** an authenticated user gets `/api/users/auth`
-- **THEN** the response contains the user's data including `roles` and `permissions` arrays
+- **THEN** the response contains the user's data including `roles`, `permissions`, `is_superadmin`, `is_admin`, `is_user` fields
 
 #### Scenario: Unauthenticated user is rejected
 - **WHEN** an unauthenticated request is sent to `/api/users/auth`

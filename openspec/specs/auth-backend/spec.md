@@ -28,7 +28,15 @@ The system SHALL allow new users to register via `POST /register` with name, use
 
 #### Scenario: Successful registration
 - **WHEN** a user sends `POST /register` with valid data (name, username, email, password, password_confirmation)
-- **THEN** the server creates the user, assigns the "regular" role, and responds with `201 Created`
+- **THEN** the server creates the user, assigns the `user` role, and responds with `201 Created`
+
+#### Scenario: Newly registered user can edit their own profile
+- **WHEN** a newly registered user calls `$user->can('edit-profile')`
+- **THEN** the result is `true`
+
+#### Scenario: Newly registered user cannot access admin panel
+- **WHEN** a newly registered user calls `$user->can('access-admin-panel')`
+- **THEN** the result is `false`
 
 #### Scenario: Registration with duplicate email
 - **WHEN** a user sends `POST /register` with an email that already exists
