@@ -17,6 +17,13 @@ const { handleSubmit, setErrors } = useForm<ForgotPasswordPayload>({
   initialValues: {
     email: '',
   },
+  validationSchema: {
+    email: (value: string) => {
+      if (!value) return 'Email is required'
+      if (!/\S+@\S+\.\S+/.test(value)) return 'Enter a valid email address'
+      return true
+    },
+  },
 })
 
 const onSubmit = handleSubmit(async (values) => {

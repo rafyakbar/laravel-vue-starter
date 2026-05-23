@@ -21,6 +21,16 @@ const { handleSubmit, setErrors } = useForm<LoginPayload>({
     email: '',
     password: '',
   },
+  validationSchema: {
+    email: (value: string) => {
+      if (!value) return 'Email or username is required'
+      return true
+    },
+    password: (value: string) => {
+      if (!value) return 'Password is required'
+      return true
+    },
+  },
 })
 
 const onSubmit = handleSubmit(async (values) => {

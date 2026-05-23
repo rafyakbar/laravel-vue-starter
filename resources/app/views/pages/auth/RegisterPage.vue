@@ -23,6 +23,30 @@ const { handleSubmit, setErrors } = useForm<RegisterPayload>({
     password: '',
     password_confirmation: '',
   },
+  validationSchema: {
+    name: (value: string) => {
+      if (!value) return 'Name is required'
+      return true
+    },
+    username: (value: string) => {
+      if (!value) return 'Username is required'
+      return true
+    },
+    email: (value: string) => {
+      if (!value) return 'Email is required'
+      if (!/\S+@\S+\.\S+/.test(value)) return 'Enter a valid email address'
+      return true
+    },
+    password: (value: string) => {
+      if (!value) return 'Password is required'
+      if (value.length < 8) return 'Password must be at least 8 characters'
+      return true
+    },
+    password_confirmation: (value: string) => {
+      if (!value) return 'Password confirmation is required'
+      return true
+    },
+  },
 })
 
 const onSubmit = handleSubmit(async (values) => {
