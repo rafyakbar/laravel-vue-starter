@@ -9,7 +9,8 @@
       "autoApprove": [
         "search-docs",
         "database-schema",
-        "application-info"
+        "application-info",
+        "read-log-entries"
       ]
     }
   }
