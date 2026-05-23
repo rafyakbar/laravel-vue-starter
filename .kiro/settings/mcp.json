@@ -11,7 +11,8 @@
         "database-schema",
         "application-info",
         "read-log-entries",
-        "get-absolute-url"
+        "get-absolute-url",
+        "database-query"
       ]
     }
   }
