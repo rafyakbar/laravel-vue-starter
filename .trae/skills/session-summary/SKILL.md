@@ -89,7 +89,7 @@ date '+%Y-%m-%d_%H-%M-%S'
 1. **Determine the title.** Pick a concise, descriptive title from the session content. If ambiguous, ask the user.
 2. **Resolve the timestamp.** Run `Get-Date -Format 'yyyy-MM-dd_HH-mm-ss'` (or the platform equivalent) to obtain the current time.
 3. **Compose the filename.** `docs/session/<timestamp>_<title>.md`.
-4. **Draft the summary.** Use the template in the next section. Keep it factual; no marketing language.
+4. **Draft the summary.** Use the template in the next section. Always write in English. Be detailed and thorough — capture every meaningful decision, rationale, problem encountered, and solution applied. Keep it factual; no marketing language.
 5. **Write the file.** Create the Markdown file at the resolved path.
 6. **Confirm.** Report the absolute path of the created file back to the user.
 
@@ -161,11 +161,12 @@ Recommended next actions, in priority order, so the next session (or another age
 
 ## Patterns & Conventions
 
+- **Always English.** The summary MUST always be written in English regardless of the language used during the session. This ensures consistency across sessions and makes summaries accessible to all team members and agents.
 - **Always Markdown.** Never use other formats (txt, yml, json) for the summary itself.
+- **Be detailed and thorough.** Capture every meaningful decision, change, problem, and solution. A summary should contain enough detail that someone who was not present can fully understand what happened and why. Do not abbreviate or skim over steps — err on the side of too much detail rather than too little.
 - **Keep it factual.** Use neutral, technical language. Avoid hype words ("successfully", "powerful", "amazing").
 - **Use relative paths.** When referring to project files, use paths relative to the workspace root.
 - **Include only what happened.** Do not invent steps or pad the summary. Empty sections should be omitted, not filled with "N/A".
-- **Match the user's primary language.** If the session was conducted in Indonesian, write the body in Indonesian; if English, write in English. The skill itself is documented in English, but the summary content reflects the user.
 - **Quote file paths and commands** with backticks.
 - **Truncate long outputs.** If a command produced large output, summarize it; do not paste hundreds of lines.
 - **Never include secrets** (API keys, tokens, passwords, contents of `.env`). If a secret was discussed, reference it by name only.
@@ -179,7 +180,8 @@ Recommended next actions, in priority order, so the next session (or another age
 | Use kebab-case ASCII for the title | Use camelCase, snake_case, or non-ASCII characters |
 | Generate the timestamp from the system clock at write time | Hardcode dates or guess timestamps |
 | Omit empty sections | Fill every section with "N/A" or "None" |
-| Match the session's primary language for the body | Force English when the session was in another language |
+| Always write the summary in English | Write in the session's conversational language |
+| Be detailed — capture every decision, problem, and solution | Write a brief or vague summary that lacks context |
 | Confirm the absolute path back to the user after writing | Silently create the file without acknowledgment |
 | Ask for a title if the session topic is ambiguous | Pick an unrelated or generic title like `session-1` |
 | Reference secrets by name only | Paste tokens, passwords, or `.env` contents |
@@ -191,6 +193,8 @@ Before finalizing:
 - [ ] File path matches `docs/session/YYYY-MM-DD_HH-mm-ss_<kebab-title>.md` exactly
 - [ ] Timestamp was obtained from the system clock at write time
 - [ ] Title is kebab-case, ≤6 words, ASCII only
+- [ ] Summary is written entirely in English
+- [ ] Summary is detailed and thorough — captures all decisions, rationale, problems, and solutions
 - [ ] Required sections (Goal, Outcome, Changes, Next Steps) are present and non-empty
 - [ ] Empty optional sections were omitted, not stubbed
 - [ ] Commands are quoted in fenced code blocks
