@@ -53,7 +53,12 @@
 - [x] 7.6 Create `resources/app/views/pages/admin/AdminPage.vue` — welcome message with user name, Home button, Sign Out button
 - [x] 7.7 Login redirects to `/admin` after success (or `redirect` query param)
 - [x] 7.8 Register redirects to `/admin` after success
-- [x] 7.9 Run `npm run build` — confirm no type errors
+- [x] 7.9 Add client-side validation rules (vee-validate inline function validators) as UX hints:
+  - LoginPage: required email/username, required password
+  - RegisterPage: required name/username, email format, password min 8 chars, required confirmation
+  - ForgotPasswordPage: required email with format check
+  - ResetPasswordPage: required email with format, password min 8, required confirmation
+- [x] 7.10 Run `npm run build` — confirm no type errors
 
 ## 8. Verification
 

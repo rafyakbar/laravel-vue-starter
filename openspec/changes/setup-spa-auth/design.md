@@ -102,9 +102,33 @@ export const useAuthStore = defineStore('auth', () => {
 
 ### 5. Form handling with vee-validate (no Zod)
 
-**Choice:** Use `vee-validate` `useForm()` + `handleSubmit()` + `setErrors()` for auth forms. No schema library (Zod/Yup). TypeScript interfaces define form shapes.
+**Choice:** Use `vee-validate` `useForm()` + `handleSubmit()` + `setErrors()` for auth forms. No schema library (Zod/Yup). TypeScript interfaces define form shapes. Inline function validators provide client-side UX hints.
 
-**Rationale:** As decided in frontend guidelines — Laravel Form Requests are the source of truth for validation. Client-side validation is limited to required-field UX hints. Server 422 errors are mapped to fields via `setErrors()`.
+**Rationale:** As decided in frontend guidelines — Laravel Form Requests are the source of truth for validation. Client-side validation is limited to required-field UX hints and basic format checks (email regex, min password length). Server 422 errors are mapped to fields via `setErrors()`.
+
+**Validation approach:** Each form defines a `validationSchema` object with inline validator functions:
+
+```typescript
+const { handleSubmit, setErrors } = useForm<LoginPayload>({
+  initialValues: { email: '', password: '' },
+  validationSchema: {
+    email: (value: string) => {
+      if (!value) return 'Email or username is required'
+      return true
+    },
+    password: (value: string) => {
+      if (!value) return 'Password is required'
+      return true
+    },
+  },
+})
+```
+
+Client-side rules per page:
+- **LoginPage:** required email/username, required password
+- **RegisterPage:** required all fields, email format, password min 8 characters
+- **ForgotPasswordPage:** required email with format check
+- **ResetPasswordPage:** required email with format, password min 8, required confirmation
 
 **File pattern:** Each auth page contains its own form logic inline (forms are simple, no need for separate validator files).
 
