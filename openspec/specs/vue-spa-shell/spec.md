@@ -27,11 +27,11 @@ The Vue application SHALL mount on `#app` and render a `<router-view>` inside th
 - **THEN** the `<router-view>` renders the `HomePage` component inside `DefaultLayout`
 
 ### Requirement: Vue Router uses HTML5 history mode
-The Vue Router SHALL use `createWebHistory()` for clean URLs without hash fragments. Routes SHALL be organized into public (guest) and protected (auth-required) groups with appropriate meta fields.
+The Vue Router SHALL use `createWebHistory()` for clean URLs without hash fragments. Routes SHALL be organized into public (guest) and protected (auth-required) groups with appropriate meta fields. The `/admin` route SHALL use nested children with a shared layout component.
 
 #### Scenario: Navigation produces clean URLs
 - **WHEN** a user navigates between routes in the SPA
-- **THEN** the browser URL reflects the route path without `#` (e.g., `/dashboard` not `/#/dashboard`)
+- **THEN** the browser URL reflects the route path without `#` (e.g., `/admin/users` not `/#/admin/users`)
 
 #### Scenario: Auth routes are defined with guest meta
 - **WHEN** the router is initialized
@@ -39,7 +39,11 @@ The Vue Router SHALL use `createWebHistory()` for clean URLs without hash fragme
 
 #### Scenario: Protected routes are defined with requiresAuth meta
 - **WHEN** the router is initialized
-- **THEN** the home route `/` and future protected routes have `meta: { requiresAuth: true }`
+- **THEN** the `/admin` parent route and all its children have `meta: { requiresAuth: true }`
+
+#### Scenario: Admin routes use nested layout pattern
+- **WHEN** the router is initialized
+- **THEN** `/admin` is a parent route with `AdminLayout` as its component, and child routes render inside the layout's `<router-view>`
 
 ### Requirement: Pinia store is initialized
 The application SHALL initialize Pinia as the state management layer, available to all components.
