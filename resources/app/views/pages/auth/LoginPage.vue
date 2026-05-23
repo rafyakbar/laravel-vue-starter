@@ -37,7 +37,9 @@ const onSubmit = handleSubmit(async (values) => {
   submitting.value = true
   try {
     await authStore.login(values)
-    const redirect = (route.query.redirect as string) || '/admin'
+    // Redirect based on user permissions, not hardcoded role
+    const hasAdminAccess = authStore.user?.permissions?.includes('access-admin-panel')
+    const redirect = (route.query.redirect as string) || (hasAdminAccess ? '/admin' : '/')
     router.push(redirect)
   } catch (error) {
     if (error instanceof ApiError && error.status === 422) {

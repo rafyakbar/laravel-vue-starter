@@ -35,6 +35,8 @@ const en = {
     signIn: 'Sign In',
     signUp: 'Sign Up',
     goToAdmin: 'Go to Admin',
+    profile: 'Profile',
+    signOut: 'Sign Out',
   },
   pages: {
     dashboard: {

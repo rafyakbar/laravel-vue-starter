@@ -44,7 +44,7 @@ async function handleLogout() {
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end" class="w-48">
       <DropdownMenuItem as-child>
-        <router-link :to="{ name: 'admin.profile' }">
+        <router-link :to="{ name: 'profile' }">
           <User class="mr-2 size-4" />
           <span>{{ t('nav.profile') }}</span>
         </router-link>

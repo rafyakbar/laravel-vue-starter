@@ -58,7 +58,7 @@ function isActive(routeName: string): boolean {
       <DropdownMenuTrigger as-child>
         <button
           class="flex flex-1 flex-col items-center justify-center gap-1 py-2 text-xs transition-colors"
-          :class="isActive('admin.profile') ? 'text-primary' : 'text-muted-foreground hover:text-foreground'"
+          :class="isActive('profile') ? 'text-primary' : 'text-muted-foreground hover:text-foreground'"
         >
           <User class="size-5" />
           <span>{{ t('nav.profile') }}</span>

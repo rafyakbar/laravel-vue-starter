@@ -6,7 +6,9 @@ export interface User {
   email_verified_at: string | null
   avatar_url: string | null
   avatar_thumb_url: string | null
+  is_superadmin: boolean
   is_admin: boolean
+  is_user: boolean
   is_owner: boolean
   roles: string[]
   permissions: string[]

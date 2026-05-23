@@ -53,7 +53,8 @@ const onSubmit = handleSubmit(async (values) => {
   submitting.value = true
   try {
     await authStore.register(values)
-    router.push({ name: 'admin.dashboard' })
+    // New users get 'user' role — no admin access, redirect to home
+    router.push({ name: 'home' })
   } catch (error) {
     if (error instanceof ApiError && error.status === 422) {
       const data = error.data as ApiValidationError

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useI18n } from '@/composables/useI18n'
 import { navItems } from '@/components/admin/nav-items'
@@ -42,6 +42,14 @@ const { t } = useI18n()
 
 /** Open state for collapsible groups (keyed by routeName) */
 const openGroups = ref<Record<string, boolean>>({ 'admin.users': true })
+
+/** Filter nav items based on user permissions */
+const visibleNavItems = computed(() => {
+  return navItems.filter((item) => {
+    if (!item.requiredPermission) return true
+    return authStore.user?.permissions?.includes(item.requiredPermission) ?? false
+  })
+})
 
 function isActive(routeName: string): boolean {
   return route.name === routeName
@@ -93,7 +101,7 @@ async function handleLogout() {
         <SidebarGroupLabel>{{ t('nav.menu') }}</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
-            <template v-for="item in navItems" :key="item.routeName">
+            <template v-for="item in visibleNavItems" :key="item.routeName">
               <!-- Item with children (collapsible group) -->
               <SidebarMenuItem v-if="item.children">
                 <Collapsible
@@ -175,7 +183,7 @@ async function handleLogout() {
             </DropdownMenuTrigger>
             <DropdownMenuContent side="top" class="w-(--reka-popper-anchor-width)">
               <DropdownMenuItem as-child>
-                <router-link :to="{ name: 'admin.profile' }">
+                <router-link :to="{ name: 'profile' }">
                   <User class="mr-2 size-4" />
                   <span>{{ t('nav.profile') }}</span>
                 </router-link>

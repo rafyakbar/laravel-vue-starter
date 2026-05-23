@@ -8,6 +8,8 @@ export interface NavItem {
   routeName: string
   children?: NavItem[]
   badge?: string
+  /** If set, item is only shown to users with this permission */
+  requiredPermission?: string
 }
 
 export const navItems: NavItem[] = [
@@ -22,6 +24,7 @@ export const navItems: NavItem[] = [
     i18nKey: 'settings',
     icon: Settings,
     routeName: 'admin.users',
+    requiredPermission: 'view-users',
     children: [
       {
         title: 'Users',

@@ -37,6 +37,8 @@ const id: Messages = {
     signIn: 'Masuk',
     signUp: 'Daftar',
     goToAdmin: 'Buka Admin',
+    profile: 'Profil',
+    signOut: 'Keluar',
   },
   pages: {
     dashboard: {

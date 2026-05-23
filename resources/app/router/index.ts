@@ -11,34 +11,34 @@ const routes = [
   {
     path: '/admin',
     component: () => import('@/views/layouts/AdminLayout.vue'),
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, requiresPermission: 'access-admin-panel' },
     redirect: { name: 'admin.dashboard' },
     children: [
       {
         path: '',
         name: 'admin.dashboard',
         component: () => import('@/views/pages/admin/DashboardPage.vue'),
-        meta: { requiresAuth: true, titleKey: 'breadcrumb.dashboard' },
+        meta: { requiresAuth: true, requiresPermission: 'access-admin-panel', titleKey: 'breadcrumb.dashboard' },
       },
       {
         path: 'users',
         name: 'admin.users',
         component: () => import('@/views/pages/admin/UsersPage.vue'),
-        meta: { requiresAuth: true, titleKey: 'breadcrumb.users' },
+        meta: { requiresAuth: true, requiresPermission: 'view-users', titleKey: 'breadcrumb.users' },
       },
       {
         path: 'roles',
         name: 'admin.roles',
         component: () => import('@/views/pages/admin/RolesPage.vue'),
-        meta: { requiresAuth: true, titleKey: 'breadcrumb.roles' },
-      },
-      {
-        path: 'profile',
-        name: 'admin.profile',
-        component: () => import('@/views/pages/admin/ProfilePage.vue'),
-        meta: { requiresAuth: true, titleKey: 'breadcrumb.profile' },
+        meta: { requiresAuth: true, requiresPermission: 'view-roles', titleKey: 'breadcrumb.roles' },
       },
     ],
+  },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: () => import('@/views/pages/ProfilePage.vue'),
+    meta: { requiresAuth: true, titleKey: 'breadcrumb.profile' },
   },
   {
     path: '/login',

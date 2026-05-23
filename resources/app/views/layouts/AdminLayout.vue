@@ -11,7 +11,9 @@ import AdminBottomNav from '@/components/admin/AdminBottomNav.vue'
     <SidebarInset>
       <AdminHeader />
       <main class="flex flex-1 flex-col gap-4 p-4 pb-20 md:pb-4">
-        <router-view />
+        <slot>
+          <router-view />
+        </slot>
       </main>
     </SidebarInset>
     <AdminBottomNav />
