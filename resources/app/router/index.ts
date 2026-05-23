@@ -10,9 +10,35 @@ const routes = [
   },
   {
     path: '/admin',
-    name: 'admin',
-    component: () => import('@/views/pages/admin/AdminPage.vue'),
+    component: () => import('@/views/layouts/AdminLayout.vue'),
     meta: { requiresAuth: true },
+    redirect: { name: 'admin.dashboard' },
+    children: [
+      {
+        path: '',
+        name: 'admin.dashboard',
+        component: () => import('@/views/pages/admin/DashboardPage.vue'),
+        meta: { requiresAuth: true, title: 'Dashboard' },
+      },
+      {
+        path: 'users',
+        name: 'admin.users',
+        component: () => import('@/views/pages/admin/UsersPage.vue'),
+        meta: { requiresAuth: true, title: 'Users' },
+      },
+      {
+        path: 'roles',
+        name: 'admin.roles',
+        component: () => import('@/views/pages/admin/RolesPage.vue'),
+        meta: { requiresAuth: true, title: 'Roles & Permissions' },
+      },
+      {
+        path: 'profile',
+        name: 'admin.profile',
+        component: () => import('@/views/pages/admin/ProfilePage.vue'),
+        meta: { requiresAuth: true, title: 'Profile' },
+      },
+    ],
   },
   {
     path: '/login',

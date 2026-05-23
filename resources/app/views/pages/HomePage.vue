@@ -17,7 +17,7 @@ const authStore = useAuthStore()
 
         <div class="mt-8 flex items-center justify-center gap-4">
           <template v-if="authStore.isAuthenticated">
-            <router-link :to="{ name: 'admin' }">
+            <router-link :to="{ name: 'admin.dashboard' }">
               <Button>Go to Admin</Button>
             </router-link>
           </template>

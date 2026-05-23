@@ -16,7 +16,7 @@ export function registerGuards(router: Router): void {
     }
 
     if (to.meta.guest && authStore.isAuthenticated) {
-      return { name: 'admin' }
+      return { name: 'admin.dashboard' }
     }
 
     return true
