@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 it('uploads an avatar for a user', function () {
     Storage::fake('public');
 
-    $admin = actingAsAdmin();
+    $superadmin = actingAsSuperadmin();
     $target = User::factory()->create();
 
     $file = UploadedFile::fake()->image('avatar.jpg', 300, 300);
@@ -20,7 +20,7 @@ it('uploads an avatar for a user', function () {
 });
 
 it('rejects avatar upload without a file', function () {
-    actingAsAdmin();
+    actingAsSuperadmin();
     $target = User::factory()->create();
 
     $this->putJson("/api/users/{$target->id}/avatar", [])

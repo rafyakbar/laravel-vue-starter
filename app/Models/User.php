@@ -98,11 +98,27 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     }
 
     /**
+     * Get the is_superadmin attribute.
+     */
+    public function getIsSuperadminAttribute(): bool
+    {
+        return $this->hasRole('superadmin');
+    }
+
+    /**
      * Get the is_admin attribute.
      */
     public function getIsAdminAttribute(): bool
     {
         return $this->hasRole('admin');
+    }
+
+    /**
+     * Get the is_user attribute.
+     */
+    public function getIsUserAttribute(): bool
+    {
+        return $this->hasRole('user');
     }
 
     /**

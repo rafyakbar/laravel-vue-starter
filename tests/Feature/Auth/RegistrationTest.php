@@ -6,7 +6,7 @@ beforeEach(function () {
     seedRolesAndPermissions();
 });
 
-it('registers a new user and assigns the regular role', function () {
+it('registers a new user and assigns the user role', function () {
     $this->postJson('/register', [
         'name' => 'John Doe',
         'username' => 'johndoe',
@@ -17,7 +17,7 @@ it('registers a new user and assigns the regular role', function () {
 
     $user = User::where('email', 'john@example.com')->first();
     expect($user)->not->toBeNull();
-    expect($user->hasRole('regular'))->toBeTrue();
+    expect($user->hasRole('user'))->toBeTrue();
 });
 
 it('rejects registration with duplicate email', function () {

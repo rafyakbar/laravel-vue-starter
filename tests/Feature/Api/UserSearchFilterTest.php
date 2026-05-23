@@ -3,7 +3,7 @@
 use App\Models\User;
 
 it('searches users by name', function () {
-    actingAsAdmin();
+    actingAsSuperadmin();
     User::factory()->create(['name' => 'John Doe', 'username' => 'johndoe123']);
     User::factory()->create(['name' => 'Jane Smith', 'username' => 'janesmith456']);
 
@@ -16,7 +16,7 @@ it('searches users by name', function () {
 });
 
 it('searches users by username', function () {
-    actingAsAdmin();
+    actingAsSuperadmin();
     User::factory()->create(['name' => 'Alice', 'username' => 'alice_unique']);
     User::factory()->create(['name' => 'Bob', 'username' => 'bob_unique']);
 
@@ -29,13 +29,13 @@ it('searches users by username', function () {
 });
 
 it('filters users by role', function () {
-    actingAsAdmin();
+    actingAsSuperadmin();
 
     $adminUser = User::factory()->create();
     $adminUser->assignRole('admin');
 
     $regularUser = User::factory()->create();
-    $regularUser->assignRole('regular');
+    $regularUser->assignRole('user');
 
     $response = $this->getJson('/api/users?filters[role]=admin')
         ->assertSuccessful();

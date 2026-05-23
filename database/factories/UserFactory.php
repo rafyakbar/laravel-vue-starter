@@ -45,6 +45,17 @@ class UserFactory extends Factory
     }
 
     /**
+     * Indicate that the user has the superadmin role.
+     * Requires RolesAndPermissionsSeeder to have run first.
+     */
+    public function superadmin(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $user->assignRole('superadmin');
+        });
+    }
+
+    /**
      * Indicate that the user has the admin role.
      * Requires RolesAndPermissionsSeeder to have run first.
      */
@@ -56,13 +67,13 @@ class UserFactory extends Factory
     }
 
     /**
-     * Indicate that the user has the regular role.
+     * Indicate that the user has the user role.
      * Requires RolesAndPermissionsSeeder to have run first.
      */
-    public function regular(): static
+    public function user(): static
     {
         return $this->afterCreating(function (User $user) {
-            $user->assignRole('regular');
+            $user->assignRole('user');
         });
     }
 }

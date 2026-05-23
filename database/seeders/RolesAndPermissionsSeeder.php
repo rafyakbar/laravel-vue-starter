@@ -11,30 +11,65 @@ class RolesAndPermissionsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     *
+     * Role hierarchy:
+     * - superadmin: system owner, holds ALL permissions explicitly
+     * - admin:      content manager, has admin-panel access but NOT user/role management
+     * - user:       default for public registration, no admin-panel access
+     *
+     * Note: We do NOT use Gate::before for superadmin bypass. All roles
+     * receive explicit permission grants so that getAllPermissions() and
+     * the user.permissions API field are consistent across all roles.
      */
     public function run(): void
     {
         // Reset cached roles and permissions
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Create permissions
-        $permissions = [
+        // User Management permissions
+        $userManagement = [
             'view-users',
             'create-users',
             'update-users',
             'delete-users',
-            'edit-profile',
         ];
 
-        foreach ($permissions as $permission) {
+        // Role Management permissions
+        $roleManagement = [
+            'view-roles',
+            'create-roles',
+            'update-roles',
+            'delete-roles',
+            'assign-roles',
+        ];
+
+        // Profile permission (all authenticated roles)
+        $profile = ['edit-profile'];
+
+        // Admin Panel gate permission (admin + superadmin)
+        $adminPanel = ['access-admin-panel'];
+
+        $allPermissions = array_merge($userManagement, $roleManagement, $profile, $adminPanel);
+
+        foreach ($allPermissions as $permission) {
             Permission::create(['name' => $permission]);
         }
 
-        // Create roles and assign permissions
-        Role::create(['name' => 'admin']);
+        // Refresh permission cache before assigning to roles
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        $regular = Role::create(['name' => 'regular']);
-        $editProfile = Permission::where('name', 'edit-profile')->first();
-        $regular->givePermissionTo($editProfile);
+        // superadmin: holds ALL permissions explicitly
+        // When new permissions are added, re-run this seeder OR update with a migration.
+        $superadmin = Role::create(['name' => 'superadmin']);
+        $superadmin->syncPermissions(Permission::all());
+
+        // admin: content manager — can access admin panel and edit own profile
+        // Does NOT have user/role management permissions
+        $admin = Role::create(['name' => 'admin']);
+        $admin->givePermissionTo(['access-admin-panel', 'edit-profile']);
+
+        // user: default for public registration — can only edit own profile
+        $user = Role::create(['name' => 'user']);
+        $user->givePermissionTo('edit-profile');
     }
 }

@@ -12,19 +12,29 @@ class UsersTableSeeder extends Seeder
      */
     public function run(): void
     {
+        // System owner — full access via Gate::before bypass
+        $superadmin = User::factory()->create([
+            'name' => 'Super Admin',
+            'username' => 'superadmin',
+            'email' => 'superadmin@example.com',
+            'password' => bcrypt('123123'),
+        ]);
+        $superadmin->assignRole('superadmin');
+
+        // Content manager — admin panel access, no user/role management
         $admin = User::factory()->create([
             'name' => 'Admin User',
             'username' => 'admin',
             'email' => 'admin@example.com',
             'password' => bcrypt('123123'),
         ]);
-
         $admin->assignRole('admin');
 
-        $others = User::factory(20)->create();
+        // Regular users — default role for public registrations
+        $users = User::factory(20)->create();
 
-        foreach ($others as $user) {
-            $user->assignRole('regular');
+        foreach ($users as $user) {
+            $user->assignRole('user');
         }
     }
 }
