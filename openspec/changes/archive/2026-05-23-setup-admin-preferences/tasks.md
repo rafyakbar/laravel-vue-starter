@@ -141,7 +141,7 @@ Initial implementation only translated nav labels and preferences menu. All page
 - [x] 10.9 Update `resources/app/components/admin/AdminHeader.vue` — breadcrumb reads from `route.meta.titleKey` (i18n key) instead of `route.meta.title`
 - [x] 10.10 Update `resources/app/router/index.ts` — replace `meta.title` with `meta.titleKey` for admin routes (e.g., `'breadcrumb.dashboard'`)
 - [x] 10.11 Run `npm run build` — confirm no type errors
-- [ ] 10.12 Manual: switch to Indonesia → all page content (titles, descriptions, button labels, breadcrumb) changes to Indonesian
+- [x] 10.12 Manual: switch to Indonesia → all page content (titles, descriptions, button labels, breadcrumb) changes to Indonesian
 
 ## 11. Site Item Position Fix
 
@@ -149,7 +149,7 @@ Currently the "Site" SidebarGroup renders directly below the main nav group. It 
 
 - [x] 11.1 Update `resources/app/components/admin/AdminSidebar.vue` — add `mt-auto` class to the Site `SidebarGroup` so it pushes to the bottom of the flex container (`SidebarContent` is flex column)
 - [x] 11.2 Run `npm run build` — confirm no type errors
-- [ ] 11.3 Manual: desktop sidebar — "Site" item is at the bottom of the content area, just above the user footer (separated by available space, not directly below Settings)
+- [x] 11.3 Manual: desktop sidebar — "Site" item is at the bottom of the content area, just above the user footer (separated by available space, not directly below Settings)
 
 ## 12. Split Theme and Language Menus
 
