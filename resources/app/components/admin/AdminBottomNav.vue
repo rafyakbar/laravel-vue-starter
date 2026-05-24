@@ -66,7 +66,7 @@ function isActive(routeName: string): boolean {
       </DropdownMenuTrigger>
       <DropdownMenuContent side="top" align="end" class="w-44">
         <DropdownMenuItem as-child>
-          <router-link :to="{ name: 'admin.profile' }">
+          <router-link :to="{ name: 'profile' }">
             <User class="mr-2 size-4" />
             <span>{{ t('nav.profile') }}</span>
           </router-link>
