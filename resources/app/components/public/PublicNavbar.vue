@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref, inject, type Ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { usePreferencesStore } from '@/stores/preferences'
 import { Button } from '@/components/ui/button'
@@ -18,10 +17,6 @@ const authStore = useAuthStore()
 const prefs = usePreferencesStore()
 const { t } = useI18n()
 
-const scrollContainer = inject<Ref<HTMLElement | null>>('scrollContainer', ref(null))
-
-const scrolled = ref(false)
-
 const APP_NAME = import.meta.env.VITE_APP_NAME || 'Laravel Vue Starter'
 
 const navLinks = [
@@ -29,58 +24,6 @@ const navLinks = [
   { name: 'features', labelKey: 'landing.nav.features' },
   { name: 'about', labelKey: 'landing.nav.about' },
 ]
-
-function checkScrolled() {
-  const threshold = 50
-
-  if (scrollContainer.value) {
-    scrolled.value = scrollContainer.value.scrollTop > threshold
-  }
-
-  if (window.scrollY > threshold) {
-    scrolled.value = true
-  }
-}
-
-function handleWindowScroll() {
-  checkScrolled()
-}
-
-function handleContainerScroll() {
-  checkScrolled()
-}
-
-function attachListeners() {
-  window.addEventListener('scroll', handleWindowScroll, { passive: true })
-  if (scrollContainer.value) {
-    scrollContainer.value.addEventListener('scroll', handleContainerScroll, { passive: true })
-  }
-}
-
-function detachListeners() {
-  window.removeEventListener('scroll', handleWindowScroll)
-  if (scrollContainer.value) {
-    scrollContainer.value.removeEventListener('scroll', handleContainerScroll)
-  }
-}
-
-import { onMounted, onUnmounted, watch } from 'vue'
-
-onMounted(() => {
-  attachListeners()
-  checkScrolled()
-})
-
-onUnmounted(() => {
-  detachListeners()
-})
-
-watch(scrollContainer, (el) => {
-  detachListeners()
-  if (el) {
-    el.addEventListener('scroll', handleContainerScroll, { passive: true })
-  }
-})
 
 async function handleLogout() {
   await authStore.logout()
@@ -90,12 +33,7 @@ async function handleLogout() {
 <template>
   <header
     data-slot="public-navbar"
-    class="relative z-50 shrink-0 border-b border-transparent transition-colors duration-300 md:fixed md:top-0 md:left-0 md:right-0 md:w-full md:border-border"
-    :class="[
-      scrolled
-        ? 'bg-background/80 shadow-sm md:backdrop-blur-md md:border-border'
-        : 'bg-transparent',
-    ]"
+    class="relative z-50 shrink-0 border-b border-border bg-background shadow-sm md:fixed md:top-0 md:left-0 md:right-0 md:w-full md:bg-background/80 md:backdrop-blur-md"
   >
     <nav class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
       <!-- Logo -->
