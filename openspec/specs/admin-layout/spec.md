@@ -11,6 +11,29 @@ The system SHALL render a sidebar-based admin layout for all `/admin` routes on 
 - **WHEN** the user clicks the sidebar collapse toggle
 - **THEN** the sidebar collapses to icon-only mode and the main content area expands
 
+### Requirement: Collapsed sidebar menu items are clickable and functional
+The system SHALL ensure all sidebar menu items remain fully interactive when the sidebar is collapsed to icon-only mode (`collapsible="icon"`). Leaf items (without children) SHALL display a tooltip on hover showing the item label. Group items (with children) SHALL open a floating dropdown menu when clicked, displaying all child items with their icons and labels.
+
+#### Scenario: Leaf item shows tooltip on hover in collapsed mode
+- **WHEN** the sidebar is collapsed to icon-only mode and the user hovers over a leaf menu item (e.g., Dashboard icon)
+- **THEN** a tooltip appears displaying the item's label (e.g., "Dashboard")
+
+#### Scenario: Leaf item navigates when clicked in collapsed mode
+- **WHEN** the sidebar is collapsed and the user clicks a leaf menu item icon (e.g., Dashboard)
+- **THEN** the router navigates to the corresponding route (e.g., `/admin`)
+
+#### Scenario: Group item opens dropdown menu in collapsed mode
+- **WHEN** the sidebar is collapsed and the user clicks a group menu item icon (e.g., Settings)
+- **THEN** a floating dropdown menu appears to the right of the sidebar, showing all child items with their icons and labels
+
+#### Scenario: Dropdown menu child items are navigable
+- **WHEN** the dropdown menu is open in collapsed mode and the user clicks a child item (e.g., "Users" or "Roles & Permissions")
+- **THEN** the router navigates to the child item's route and the dropdown closes
+
+#### Scenario: Dropdown menu closes on outside click
+- **WHEN** the dropdown menu is open in collapsed mode and the user clicks outside the menu
+- **THEN** the dropdown menu closes without navigation
+
 ### Requirement: Admin layout provides off-canvas drawer on mobile
 The system SHALL render navigation as an off-canvas drawer (Sheet) on viewports < 768px, triggered by a hamburger button.
 
@@ -67,9 +90,17 @@ The system SHALL render a sticky header at the top of the admin content area con
 ### Requirement: Navigation items with grouped structure
 The system SHALL organize navigation items as: Dashboard (top-level), and a collapsible Settings group containing Users and Roles & Permissions sub-items.
 
-#### Scenario: Settings group is collapsible
-- **WHEN** the user clicks the "Settings" group heading in the sidebar
-- **THEN** the group expands or collapses to show/hide its children (Users, Roles & Permissions)
+#### Scenario: Settings group expands inline in expanded mode
+- **WHEN** the sidebar is expanded and the user clicks the "Settings" group heading
+- **THEN** the group expands inline to show child items (Users, Roles & Permissions) within the sidebar
+
+#### Scenario: Settings group collapses inline in expanded mode
+- **WHEN** the Settings group is expanded and the user clicks the group heading again
+- **THEN** the group collapses, hiding the child items
+
+#### Scenario: Settings group opens dropdown in collapsed mode
+- **WHEN** the sidebar is collapsed to icon-only mode and the user clicks the Settings icon
+- **THEN** a floating dropdown menu appears showing child items (Users, Roles & Permissions) with icons and labels
 
 #### Scenario: Placeholder pages show badge indicator
 - **WHEN** the user navigates to Users or Roles & Permissions

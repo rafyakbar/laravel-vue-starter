@@ -103,7 +103,7 @@
     - ✅ superadmin can navigate to Users from collapsed dropdown
     - ✅ superadmin can navigate to Roles from collapsed dropdown
 
-- [ ] 10.3 Run complete E2E suite to verify no regressions:
+- [x] 10.3 Run complete E2E suite to verify no regressions:
   ```bash
   npm run test:e2e
   ```
@@ -114,5 +114,5 @@
 - [x] 11.1 Run Pint: `vendor/bin/pint --format agent` — fix any PHP formatting (none expected, but verify)
 - [x] 11.2 Run TypeScript check: `npx vue-tsc --noEmit` — no type errors ✓
 - [x] 11.3 Run build: `npm run build` — successful production build ✓
-- [ ] 11.4 Verify no console errors in browser DevTools during manual testing
+- [x] 11.4 Verify no console errors in browser DevTools during manual testing
 - [x] 11.5 Run existing Pest tests: `composer run test` — all tests pass (no backend changes, but verify)
