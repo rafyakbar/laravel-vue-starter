@@ -11,8 +11,9 @@ import { test, expect } from '@playwright/test'
 test.describe('Guest Navigation Guards', () => {
   test('home page shows Sign In and Sign Up for guests', async ({ page }) => {
     await page.goto('/')
-    await expect(page.getByRole('button', { name: 'Sign In' })).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Sign Up' })).toBeVisible()
+    const navbar = page.locator('[data-slot="public-navbar"]')
+    await expect(navbar.getByRole('button', { name: 'Sign In' })).toBeVisible()
+    await expect(navbar.getByRole('button', { name: 'Sign Up' })).toBeVisible()
   })
 
   test('visiting /admin redirects to login with redirect param', async ({ page }) => {

@@ -8,8 +8,9 @@ import { test, expect } from '@playwright/test'
  * EN: "Settings", "Users", "Roles & Permissions"
  * ID: "Pengaturan", "Pengguna", "Peran & Izin"
  *
- * Home EN: "Go to Admin", "Profile", "Sign Out"
- * Home ID: "Buka Admin", "Profil", "Keluar"
+ * Landing page navbar (en/id):
+ *   EN: "Admin" button, user name, "Sign Out"
+ *   ID: "Admin" button, user name, "Keluar"
  */
 test.describe('Superadmin Role — Language Switching', () => {
   test.beforeEach(async ({ page }) => {
@@ -22,7 +23,6 @@ test.describe('Superadmin Role — Language Switching', () => {
 
   test('sidebar Settings group shows Indonesian labels after switch', async ({ page }) => {
     const sidebarContent = page.locator('[data-sidebar="content"]')
-    // Settings group is open by default — Users link should be visible without clicking
     await expect(sidebarContent.getByRole('link', { name: 'Users' })).toBeVisible()
 
     // Switch to Indonesian
@@ -30,7 +30,7 @@ test.describe('Superadmin Role — Language Switching', () => {
     await page.getByText('Indonesia').click()
     await page.waitForLoadState('networkidle')
 
-    // Settings group should now show Indonesian labels (still open by default)
+    // Settings group should show Indonesian labels
     await expect(sidebarContent.getByText('Pengaturan')).toBeVisible()
     await expect(sidebarContent.getByRole('link', { name: 'Pengguna' })).toBeVisible()
     await expect(sidebarContent.getByRole('link', { name: 'Peran & Izin' })).toBeVisible()
@@ -45,9 +45,9 @@ test.describe('Superadmin Role — Language Switching', () => {
     // Navigate to home
     await page.goto('/')
     await page.waitForLoadState('networkidle')
-    // Home buttons in Indonesian
-    await expect(page.getByRole('link', { name: 'Buka Admin' })).toBeVisible()
-    await expect(page.getByRole('link', { name: 'Profil' })).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Keluar' })).toBeVisible()
+    // Landing navbar shows "Admin" (same in both languages) and "Keluar" (Sign Out in ID)
+    const navbar = page.locator('[data-slot="public-navbar"]')
+    await expect(navbar.getByRole('button', { name: 'Admin', exact: true })).toBeVisible()
+    await expect(navbar.getByRole('button', { name: 'Keluar' })).toBeVisible()
   })
 })

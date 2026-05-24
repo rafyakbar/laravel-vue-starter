@@ -9,8 +9,9 @@ import { test, expect } from '@playwright/test'
  * EN labels: Dashboard, Settings, Site, Sign Out
  * ID labels: Dasbor, Pengaturan, Situs, Keluar
  *
- * Home EN: "Go to Admin", "Profile", "Sign Out"
- * Home ID: "Buka Admin", "Profil", "Keluar"
+ * Landing page navbar (en/id):
+ *   EN: "Admin" button, "Sign Out" button
+ *   ID: "Admin" button, "Keluar" button
  */
 test.describe('Admin Role — Language Switching', () => {
   test.beforeEach(async ({ page }) => {
@@ -27,11 +28,9 @@ test.describe('Admin Role — Language Switching', () => {
   })
 
   test('switching to Indonesian changes sidebar nav labels', async ({ page }) => {
-    // Open language dropdown — button has sr-only text "Language"
     await page.getByRole('button', { name: 'Language' }).click()
     await page.getByText('Indonesia').click()
     await page.waitForLoadState('networkidle')
-    // Sidebar should now show Indonesian labels
     await expect(page.locator('[data-sidebar="content"]').getByRole('link', { name: 'Dasbor' })).toBeVisible()
   })
 
@@ -39,7 +38,6 @@ test.describe('Admin Role — Language Switching', () => {
     await page.getByRole('button', { name: 'Language' }).click()
     await page.getByText('Indonesia').click()
     await page.waitForLoadState('networkidle')
-    // Dashboard description: "Selamat datang di panel admin Anda"
     await expect(page.getByText(/Selamat datang/)).toBeVisible()
   })
 
