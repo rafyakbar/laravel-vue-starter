@@ -1,4 +1,9 @@
 import { defineConfig, devices } from '@playwright/test'
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const authDir = path.join(__dirname, '.auth')
 
 /**
  * Playwright E2E configuration for laravel-vue-starter.
@@ -75,7 +80,7 @@ export default defineConfig({
       testDir: './tests/user',
       use: {
         ...devices['Desktop Chrome'],
-        storageState: './tests/e2e/.auth/user.json',
+        storageState: path.join(authDir, 'user.json'),
       },
       dependencies: ['auth-setup'],
     },
@@ -86,7 +91,7 @@ export default defineConfig({
       testDir: './tests/admin',
       use: {
         ...devices['Desktop Chrome'],
-        storageState: './tests/e2e/.auth/admin.json',
+        storageState: path.join(authDir, 'admin.json'),
       },
       dependencies: ['auth-setup'],
     },
@@ -97,7 +102,7 @@ export default defineConfig({
       testDir: './tests/superadmin',
       use: {
         ...devices['Desktop Chrome'],
-        storageState: './tests/e2e/.auth/superadmin.json',
+        storageState: path.join(authDir, 'superadmin.json'),
       },
       dependencies: ['auth-setup'],
     },
