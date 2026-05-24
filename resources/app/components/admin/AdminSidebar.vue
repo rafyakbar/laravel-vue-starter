@@ -34,11 +34,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
 import { ChevronRight, ChevronUp, Globe, LogOut, User } from 'lucide-vue-next'
+import { useSidebar } from '@/components/ui/sidebar/utils'
 
 const route = useRoute()
 const authStore = useAuthStore()
 const { t } = useI18n()
+const { state, isMobile } = useSidebar()
 
 /** Open state for collapsible groups (keyed by routeName) */
 const openGroups = ref<Record<string, boolean>>({ 'admin.users': true })
@@ -104,7 +107,27 @@ async function handleLogout() {
             <template v-for="item in visibleNavItems" :key="item.routeName">
               <!-- Item with children (collapsible group) -->
               <SidebarMenuItem v-if="item.children">
-                <Collapsible
+                <!-- Collapsed: DropdownMenu -->
+                <DropdownMenu v-if="state === 'collapsed' && !isMobile">
+                  <DropdownMenuTrigger as-child>
+                    <SidebarMenuButton :tooltip="t(`nav.${item.i18nKey}`)">
+                      <component :is="item.icon" />
+                      <span>{{ t(`nav.${item.i18nKey}` as any) }}</span>
+                    </SidebarMenuButton>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent side="right" align="start" :side-offset="8" class="w-56">
+                    <DropdownMenuItem v-for="child in item.children" :key="child.routeName" as-child>
+                      <router-link :to="{ name: child.routeName }" class="flex items-center gap-2">
+                        <component :is="child.icon" class="size-4" />
+                        <span>{{ t(`nav.${child.i18nKey}` as any) }}</span>
+                        <Badge v-if="child.badge" variant="secondary" class="ml-auto">{{ child.badge }}</Badge>
+                      </router-link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                <!-- Expanded: Collapsible -->
+                <Collapsible v-else
                   v-model:open="openGroups[item.routeName]"
                   class="group/collapsible"
                 >
@@ -132,7 +155,7 @@ async function handleLogout() {
 
               <!-- Top-level item (no children) -->
               <SidebarMenuItem v-else>
-                <SidebarMenuButton as-child :is-active="isActive(item.routeName)">
+                <SidebarMenuButton :tooltip="t(`nav.${item.i18nKey}`)" as-child :is-active="isActive(item.routeName)">
                   <router-link :to="{ name: item.routeName }">
                     <component :is="item.icon" />
                     <span>{{ t(`nav.${item.i18nKey}` as any) }}</span>
