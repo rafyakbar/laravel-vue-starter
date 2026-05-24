@@ -66,6 +66,27 @@ const id: Messages = {
       comingSoonText: 'Pengeditan profil akan tersedia pada pembaruan mendatang.',
     },
   },
+  landing: {
+    nav: {
+      brand: 'Laravel Vue Starter',
+      home: 'Beranda',
+      features: 'Fitur',
+      about: 'Tentang',
+      signIn: 'Masuk',
+      signUp: 'Daftar',
+      signOut: 'Keluar',
+      admin: 'Admin',
+    },
+    footer: {
+      brand: 'Laravel Vue Starter',
+      description: 'Starter dashboard admin SPA siap produksi dibangun dengan Laravel 13 dan Vue 3.',
+      links: 'Tautan',
+      connect: 'Terhubung',
+      features: 'Fitur',
+      about: 'Tentang',
+      rights: 'Hak cipta dilindungi.',
+    },
+  },
 }
 
 export default id

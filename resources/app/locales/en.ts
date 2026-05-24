@@ -64,6 +64,27 @@ const en = {
       comingSoonText: 'Profile editing will be available in a future update.',
     },
   },
+  landing: {
+    nav: {
+      brand: 'Laravel Vue Starter',
+      home: 'Home',
+      features: 'Features',
+      about: 'About',
+      signIn: 'Sign In',
+      signUp: 'Sign Up',
+      signOut: 'Sign Out',
+      admin: 'Admin',
+    },
+    footer: {
+      brand: 'Laravel Vue Starter',
+      description: 'A production-ready SPA admin dashboard starter built with Laravel 13 and Vue 3.',
+      links: 'Links',
+      connect: 'Connect',
+      features: 'Features',
+      about: 'About',
+      rights: 'All rights reserved.',
+    },
+  },
 } as const
 
 export default en
