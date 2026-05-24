@@ -27,7 +27,7 @@ Playwright provides cross-browser E2E testing with auto-waiting, cookie/session 
 
 ### New Capabilities
 
-- `e2e-testing`: Playwright E2E test infrastructure including configuration, auth setup with storageState per role, global database seeding, and browser tests covering guest auth flows, per-role navigation guards, and admin panel permission-based access
+- `e2e-testing`: Playwright E2E test infrastructure including configuration, auth setup with storageState per role, global database seeding, and browser tests covering guest auth flows, per-role navigation guards, admin panel permission-based access, **sidebar collapse/expand functionality, collapsed sidebar navigation with tooltips and dropdown menus, theme switching, and language switching**
 
 ### Modified Capabilities
 

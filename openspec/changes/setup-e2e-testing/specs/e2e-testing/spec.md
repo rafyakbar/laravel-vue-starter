@@ -261,6 +261,57 @@ The system SHALL include E2E tests verifying that dark/light/system theme switch
 - **WHEN** the user selects dark mode and reloads the page
 - **THEN** the `dark` class is still present on `<html>`
 
+### Requirement: Sidebar collapse/expand E2E tests
+The system SHALL include E2E tests verifying that the sidebar collapse/expand toggle works correctly on desktop, with different navigation patterns for collapsed (icon-only) vs expanded states.
+
+#### Scenario: Desktop sidebar starts expanded by default
+- **WHEN** an authenticated admin/superadmin visits `/admin` on a desktop viewport (≥ 768px)
+- **THEN** the sidebar is in expanded state (`data-state="expanded"`) and shows full navigation labels
+
+#### Scenario: Clicking sidebar rail collapses the sidebar
+- **WHEN** the user clicks the sidebar rail (toggle button on the right edge of sidebar)
+- **THEN** the sidebar collapses to icon-only mode (`data-state="collapsed"`) and width reduces to icon width
+
+#### Scenario: Collapsed sidebar shows tooltips on hover
+- **WHEN** the sidebar is collapsed and the user hovers over the Dashboard icon
+- **THEN** a tooltip appears displaying "Dashboard"
+
+#### Scenario: Collapsed sidebar Dashboard icon is clickable
+- **WHEN** the sidebar is collapsed and the user clicks the Dashboard icon
+- **THEN** the router navigates to `/admin`
+
+#### Scenario: Collapsed sidebar Settings opens dropdown menu
+- **WHEN** the sidebar is collapsed and the user clicks the Settings icon
+- **THEN** a floating dropdown menu appears to the right with "Users" and "Roles & Permissions" items
+
+#### Scenario: Dropdown menu child items are clickable
+- **WHEN** the Settings dropdown menu is open and the user clicks "Users"
+- **THEN** the router navigates to `/admin/users` and the dropdown closes
+
+#### Scenario: Dropdown menu closes on outside click
+- **WHEN** the Settings dropdown menu is open and the user clicks outside the menu
+- **THEN** the dropdown menu closes without navigation
+
+#### Scenario: Clicking sidebar rail expands the sidebar
+- **WHEN** the sidebar is collapsed and the user clicks the sidebar rail again
+- **THEN** the sidebar expands to full width (`data-state="expanded"`)
+
+#### Scenario: Expanded sidebar Settings uses inline collapsible
+- **WHEN** the sidebar is expanded and the user clicks the "Settings" group heading
+- **THEN** the group expands inline to show child items (Users, Roles & Permissions) within the sidebar
+
+#### Scenario: Expanded sidebar Settings collapsible toggles
+- **WHEN** the Settings group is expanded and the user clicks the group heading again
+- **THEN** the group collapses, hiding the child items
+
+#### Scenario: Expanded sidebar shows "Coming Soon" badges
+- **WHEN** the Settings group is expanded in the sidebar
+- **THEN** "Coming Soon" badges are visible next to "Users" and "Roles & Permissions" items
+
+#### Scenario: Sidebar state persists after page reload
+- **WHEN** the sidebar is collapsed and the user reloads the page
+- **THEN** the sidebar remains in collapsed state
+
 ### Requirement: E2E tests are runnable via npm scripts
 The system SHALL provide npm scripts for common Playwright operations.
 

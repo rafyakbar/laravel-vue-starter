@@ -184,7 +184,34 @@ Theme switching is available in admin header via SunMoon icon dropdown with "Lig
   - Test: `theme persists after page reload` — switch to dark, reload, expect `dark` class still present
 - [x] 12.2 Run: `npx playwright test --config=tests/e2e/playwright.config.ts tests/e2e/tests/admin/theme.spec.ts`
 
-## 13. Full Suite Verification
+## 13. Sidebar Collapse/Expand Tests
+
+Sidebar collapse/expand toggle is available via the sidebar rail (vertical bar on the right edge of the sidebar). Collapsed state shows icon-only navigation with tooltips on hover. Group items (Settings) show a dropdown menu in collapsed mode.
+
+- [x] 13.1 Create `tests/e2e/tests/admin/sidebar-collapse.spec.ts` (uses admin storageState, desktop viewport):
+  - Test: `sidebar starts expanded by default` — visit `/admin`, expect sidebar has `data-state="expanded"` attribute
+  - Test: `clicking sidebar rail collapses sidebar` — click sidebar rail (use `page.locator('[data-sidebar="rail"]')`), expect sidebar has `data-state="collapsed"`, expect sidebar width is reduced (icon-only)
+  - Test: `collapsed sidebar shows tooltip on Dashboard hover` — hover over Dashboard icon, expect tooltip with text "Dashboard" is visible
+  - Test: `collapsed sidebar Dashboard click navigates` — click Dashboard icon, expect URL matches `/admin`
+  - Test: `collapsed sidebar Settings opens dropdown` — click Settings icon, expect dropdown menu appears with "Users" and "Roles & Permissions"
+  - Test: `dropdown menu Users click navigates` — click "Users" in dropdown, expect URL matches `/admin/users`, expect dropdown closes
+  - Test: `dropdown menu closes on outside click` — click Settings to open dropdown, click outside menu, expect dropdown closes
+  - Test: `clicking rail expands sidebar` — click sidebar rail, expect sidebar has `data-state="expanded"`, expect full width
+  - Test: `expanded sidebar Settings uses inline collapsible` — click "Settings" group heading, expect child items expand inline within sidebar
+  - Test: `expanded sidebar Settings collapsible toggles` — click "Settings" again, expect child items collapse
+  - Test: `expanded sidebar shows Coming Soon badges` — expand Settings group, expect "Coming Soon" badges visible next to Users and Roles
+  - Test: `sidebar state persists after reload` — collapse sidebar, reload page, expect sidebar remains collapsed (`data-state="collapsed"`)
+- [x] 13.2 Create `tests/e2e/tests/superadmin/sidebar-collapse.spec.ts` (uses superadmin storageState):
+  - Test: `superadmin collapsed sidebar shows all nav items` — collapse sidebar, hover each icon, expect tooltips: Dashboard, Settings, Site
+  - Test: `superadmin collapsed Settings dropdown shows Users and Roles` — click Settings icon, expect dropdown shows "Users" and "Roles & Permissions" with icons
+  - Test: `superadmin can navigate to Users from collapsed dropdown` — click Settings, click "Users", expect URL `/admin/users`
+  - Test: `superadmin can navigate to Roles from collapsed dropdown` — collapse sidebar, click Settings, click "Roles & Permissions", expect URL `/admin/roles`
+- [x] 13.3 Run: `npx playwright test --config=tests/e2e/playwright.config.ts tests/e2e/tests/admin/sidebar-collapse.spec.ts tests/e2e/tests/superadmin/sidebar-collapse.spec.ts`
+  - **15/15 tests pass** — all sidebar collapse/expand behavior verified:
+    - Admin: expanded/collapsed toggle, Dashboard tooltip, Dashboard click, Site link, rail expand, state persistence
+    - Superadmin: Dashboard tooltip, Settings dropdown opens, navigate to Users, navigate to Roles
+
+## 14. Full Suite Verification
 
 - [x] 13.1 Run the complete E2E suite: `npm run test:e2e` — all tests pass
 - [x] 13.2 Verify HTML report: `npx playwright show-report` (manual check)
