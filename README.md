@@ -186,7 +186,7 @@ This launches:
 ├── tests/
 │   ├── Feature/                 # Pest feature tests (73 tests)
 │   ├── Unit/                    # Pest unit tests
-│   └── e2e/                     # Playwright E2E tests (79 tests)
+│   └── e2e/                     # Playwright E2E tests (169 tests)
 │       ├── playwright.config.ts
 │       ├── global.setup.ts
 │       ├── auth.setup.ts
@@ -215,7 +215,7 @@ php artisan test --compact tests/Feature/Authorization/
 
 Covers: authentication flows, user CRUD, role/permission enforcement, avatar upload, API endpoints.
 
-### Playwright (E2E — 79 tests)
+### Playwright (E2E — 169 tests)
 
 ```bash
 # Run all E2E tests (headless)
@@ -231,17 +231,17 @@ npm run test:e2e:ui
 npx playwright test --config=tests/e2e/playwright.config.ts --project=admin
 ```
 
-Covers: login/register/forgot-password flows, navigation guards per role, admin sidebar visibility, language switching (EN↔ID), dark mode toggle, guest page restrictions.
+Covers: login/register/forgot-password flows, navigation guards per role, admin sidebar visibility, language switching (EN↔ID), dark mode toggle, guest page restrictions, and responsive layout testing across mobile (375x667), tablet (769x1024), and desktop (1280x720) viewports per role.
 
 **Test projects:**
 
 | Project | Scope | Auth State |
 |---------|-------|-----------|
-| `guest` | Navigation guards, page accessibility | Unauthenticated |
+| `guest` | Navigation guards, page accessibility, responsive mobile/tablet | Unauthenticated |
 | `auth` | Login, register, forgot-password forms | Unauthenticated |
-| `user` | Home, profile, restricted page redirects | User role |
-| `admin` | Dashboard, sidebar, restricted pages, i18n, theme | Admin role |
-| `superadmin` | Full access, settings group, i18n | Superadmin role |
+| `user` | Home, profile, restricted page redirects, responsive mobile/tablet | User role |
+| `admin` | Dashboard, sidebar, restricted pages, i18n, theme, responsive mobile/tablet, mobile bottom nav/sidebar drawer | Admin role |
+| `superadmin` | Full access, settings group, i18n, responsive mobile/tablet | Superadmin role |
 
 ---
 
