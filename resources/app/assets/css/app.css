@@ -114,6 +114,18 @@
     @apply bg-background text-foreground;
     @apply font-sans;
   }
+  button:not(:disabled):not([aria-disabled="true"]),
+  [role="button"]:not(:disabled):not([aria-disabled="true"]),
+  [role="menuitem"]:not(:disabled):not([aria-disabled="true"]),
+  [role="menuitemradio"]:not(:disabled):not([aria-disabled="true"]),
+  [role="option"]:not(:disabled):not([aria-disabled="true"]),
+  [role="tab"]:not(:disabled):not([aria-disabled="true"]),
+  [role="switch"]:not(:disabled):not([aria-disabled="true"]),
+  [role="checkbox"]:not(:disabled):not([aria-disabled="true"]),
+  [role="radio"]:not(:disabled):not([aria-disabled="true"]),
+  label:not(:disabled):not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
 }
 
 /*
