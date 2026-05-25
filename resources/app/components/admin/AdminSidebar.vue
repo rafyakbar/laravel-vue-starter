@@ -4,6 +4,7 @@ import { ref, computed } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useI18n } from '@/composables/useI18n'
 import { navItems } from '@/components/admin/nav-items'
+import UserInitials from '@/components/shared/UserInitials.vue'
 import {
   Sidebar,
   SidebarContent,
@@ -33,7 +34,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { ChevronRight, ChevronUp, Globe, LogOut, User } from 'lucide-vue-next'
 import { useSidebar } from '@/components/ui/sidebar/utils'
@@ -60,19 +60,6 @@ function isActive(routeName: string): boolean {
 
 function isGroupActive(children: { routeName: string }[]): boolean {
   return children.some((child) => route.name === child.routeName)
-}
-
-function userInitials(name: string): string {
-  return name
-    .split(' ')
-    .map((n) => n[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2)
-}
-
-async function handleLogout() {
-  await authStore.logout()
 }
 </script>
 
@@ -192,11 +179,7 @@ async function handleLogout() {
           <DropdownMenu>
             <DropdownMenuTrigger as-child>
               <SidebarMenuButton size="lg">
-                <Avatar class="size-8 rounded-lg">
-                  <AvatarFallback class="rounded-lg text-xs">
-                    {{ userInitials(authStore.user?.name ?? 'U') }}
-                  </AvatarFallback>
-                </Avatar>
+                <UserInitials :name="authStore.user?.name ?? 'U'" :email="authStore.user?.email" size="sm" />
                 <div class="grid flex-1 text-left text-sm leading-tight">
                   <span class="truncate font-semibold">{{ authStore.user?.name }}</span>
                   <span class="truncate text-xs text-muted-foreground">{{ authStore.user?.email }}</span>
@@ -212,7 +195,7 @@ async function handleLogout() {
                 </router-link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem @click="handleLogout">
+              <DropdownMenuItem @click="authStore.logout()">
                 <LogOut class="mr-2 size-4" />
                 <span>{{ t('nav.signOut') }}</span>
               </DropdownMenuItem>
