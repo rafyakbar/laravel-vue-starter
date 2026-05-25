@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import LandingSection from '@/components/shared/LandingSection.vue'
 </script>
 
 <template>
-  <section data-animate class="px-4 py-20 sm:px-6 lg:px-8">
-    <div class="mx-auto max-w-5xl">
+  <LandingSection>
       <h2 class="mb-10 text-center text-3xl font-bold tracking-tight">Stack</h2>
 
       <div class="grid gap-8 md:grid-cols-2">
@@ -78,6 +78,5 @@
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </LandingSection>
 </template>

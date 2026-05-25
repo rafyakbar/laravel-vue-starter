@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import LandingSection from '@/components/shared/LandingSection.vue'
 import { ref } from 'vue'
 
 const showDirTree = ref(false)
@@ -27,8 +28,7 @@ const dirTree = `├── app/
 </script>
 
 <template>
-  <section data-animate class="px-4 py-20 sm:px-6 lg:px-8">
-    <div class="mx-auto max-w-5xl">
+  <LandingSection>
       <h2 class="mb-10 text-center text-3xl font-bold tracking-tight">Architecture</h2>
 
       <div class="grid gap-6 md:grid-cols-2">
@@ -83,6 +83,5 @@ const dirTree = `├── app/
           class="overflow-x-auto rounded-lg bg-muted p-4 text-xs leading-relaxed text-muted-foreground"
         ><code>{{ dirTree }}</code></pre>
       </div>
-    </div>
-  </section>
+    </LandingSection>
 </template>

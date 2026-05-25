@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import LandingSection from '@/components/shared/LandingSection.vue'
 </script>
 
 <template>
-  <section data-animate class="px-4 py-20 sm:px-6 lg:px-8">
+  <LandingSection>
     <div
       class="relative mx-auto max-w-3xl overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-primary/5 via-background to-primary/5 p-10 text-center shadow-lg sm:p-14"
     >
@@ -48,5 +49,5 @@
         </a>
       </div>
     </div>
-  </section>
+  </LandingSection>
 </template>

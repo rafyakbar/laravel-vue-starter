@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import LandingSection from '@/components/shared/LandingSection.vue'
 import { ref } from 'vue'
 import { ChevronDownIcon } from '@lucide/vue'
 
@@ -41,7 +42,7 @@ function toggle(index: number) {
 </script>
 
 <template>
-  <section data-animate class="px-4 py-20 sm:px-6 lg:px-8">
+  <LandingSection>
     <div class="mx-auto max-w-3xl">
       <h2 class="mb-10 text-center text-3xl font-bold tracking-tight">FAQ</h2>
 
@@ -70,5 +71,5 @@ function toggle(index: number) {
         </div>
       </div>
     </div>
-  </section>
+  </LandingSection>
 </template>

@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import LandingSection from '@/components/shared/LandingSection.vue'
 </script>
 
 <template>
-  <section id="quick-start" data-animate class="px-4 py-20 sm:px-6 lg:px-8">
-    <div class="mx-auto max-w-5xl">
+  <LandingSection id="quick-start">
       <h2 class="mb-10 text-center text-3xl font-bold tracking-tight">Quick Start</h2>
 
       <!-- Prerequisites -->
@@ -73,6 +73,5 @@ composer run dev</code></pre>
           </table>
         </div>
       </div>
-    </div>
-  </section>
+    </LandingSection>
 </template>
