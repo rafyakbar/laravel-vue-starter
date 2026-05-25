@@ -57,54 +57,27 @@ Template: Named slot `#trigger` for the trigger button. Internally renders `<Dro
 
 - [x] 2.2 Create `resources/app/components/shared/GuestAuthDropdown.vue` with `#trigger` slot, `<DropdownMenu>` containing Sign In (`router-link :to="{ name: 'login' }"`) and Sign Up (`router-link :to="{ name: 'register' }"`) menuitems separated by `<DropdownMenuSeparator>`. Use `useI18n()` for labels.
 
-### 2.3 UserProfileDropdown component
+### 2.3 ProfileDropdown component (props-based, no slot for trigger)
 
-Create `resources/app/components/shared/UserProfileDropdown.vue`:
+Create `resources/app/components/shared/ProfileDropdown.vue`:
 
-Props:
+Props-based API (avoids `as-child` slot limitation by rendering the `<button>` directly in template):
+
 ```ts
 defineProps<{
   side?: 'top' | 'right' | 'bottom' | 'left'
   align?: 'start' | 'center' | 'end'
-  showProfile?: boolean
+  label?: string
+  triggerClass?: string
+  active?: boolean
 }>()
 ```
 
-Template: Named slot `#trigger` for the trigger button. Internally renders `<DropdownMenu>` + `<DropdownMenuTrigger>` + `<DropdownMenuContent>` with:
-- `<DropdownMenuItem>` as `<router-link :to="{ name: 'profile' }">` with `<User>` icon + "Profile" label (if `showProfile !== false`)
-- `<DropdownMenuSeparator>`
-- `<DropdownMenuItem>` with `<LogOut>` icon + "Sign Out" label, `@click="authStore.logout()"`
+Renders `<DropdownMenu>` + `<DropdownMenuTrigger as-child>` with a `<button>` directly in the template using `triggerClass` and `active` for styling. Content: `<DropdownMenuItem>` Profile link + `<DropdownMenuSeparator>` + `<DropdownMenuItem>` Sign Out calling `authStore.logout()`.
 
-Uses `useAuthStore()` and `useI18n()`. Default `side="top"`, `align="end"`, `showProfile=true`.
+- [x] 2.3 Create `resources/app/components/shared/ProfileDropdown.vue` with props: `side`, `align`, `label`, `triggerClass`, `active`. Renders `<DropdownMenu>` with trigger `<button>` (rendered directly, no slot), Profile menuitem, and Sign Out menuitem.
 
-- [x] 2.3 Create `resources/app/components/shared/UserProfileDropdown.vue` with `#trigger` slot, props `side`, `align`, `showProfile`. Renders `<DropdownMenu>` with Profile menuitem (`router-link :to="{ name: 'profile' }"`), `<DropdownMenuSeparator>`, and Sign Out menuitem calling `authStore.logout()`. Uses `useAuthStore()`, `useI18n()`, `<User>` and `<LogOut>` icons.
-
-### 2.4 AuthNavDropdown component
-
-Create `resources/app/components/shared/AuthNavDropdown.vue`:
-
-Smart wrapper that checks `authStore.isAuthenticated` and renders either `UserProfileDropdown` or `GuestAuthDropdown`. Exposes `label` in the `#trigger` slot scope:
-- Guest: `landing.nav.signIn` ("Sign In")  
-- Authenticated: `authStore.user?.name`
-
-Props: forwarded `side`, `align` to both sub-components.
-
-```vue
-<template>
-  <UserProfileDropdown v-if="authStore.isAuthenticated" :side="side" :align="align">
-    <template #trigger>
-      <slot name="trigger" :label="authStore.user?.name" />
-    </template>
-  </UserProfileDropdown>
-  <GuestAuthDropdown v-else :side="side" :align="align">
-    <template #trigger>
-      <slot name="trigger" :label="t('landing.nav.signIn')" />
-    </template>
-  </GuestAuthDropdown>
-</template>
-```
-
-- [x] 2.4 Create `resources/app/components/shared/AuthNavDropdown.vue` that auto-detects `authStore.isAuthenticated` and renders `UserProfileDropdown` (authenticated) or `GuestAuthDropdown` (guest). Expose `label` slot prop: `"Sign In"` for guest, `authStore.user?.name` for authenticated.
+- [x] 2.4 Create `resources/app/components/shared/AuthDropdown.vue` with props: `side`, `align`, `triggerClass`, `active`. Auto-detects auth state, renders guest or user dropdown content. Trigger `<button>` rendered directly in template.
 
 ### 2.5 LandingSection component
 
@@ -133,30 +106,25 @@ Uses `cn` utility from `@/lib/utils`.
 
 File: `resources/app/components/admin/AdminBottomNav.vue`
 
-Replace the Profile dropdown section (currently ~30 lines: `<DropdownMenu>` + trigger + content with Profile/Sign Out) with:
+Replace the inline Profile dropdown section (lines 56-80) with `<ProfileDropdown>`:
 
 ```vue
-<UserProfileDropdown side="top" align="end">
-  <template #trigger>
-    <button class="flex flex-1 flex-col items-center justify-center gap-1 py-2 text-xs transition-colors"
-      :class="isActive('profile') ? 'text-primary' : 'text-muted-foreground hover:text-foreground'">
-      <User class="size-5" />
-      <span>{{ t('nav.profile') }}</span>
-    </button>
-  </template>
-</UserProfileDropdown>
+<ProfileDropdown
+  side="top"
+  align="end"
+  :active="isActive('profile')"
+  trigger-class="flex flex-1 flex-col items-center justify-center gap-1 py-2 text-xs transition-colors"
+  :label="t('nav.profile')"
+/>
 ```
 
-- Remove the inline `<DropdownMenu>`, `<DropdownMenuTrigger>`, `<DropdownMenuContent>`, `<DropdownMenuItem>`s, `<DropdownMenuSeparator>`.
-- Keep the trigger `:class` binding for active route highlighting.
-- Remove unused imports: `DropdownMenu`, `DropdownMenuContent`, `DropdownMenuItem`, `DropdownMenuSeparator`, `DropdownMenuTrigger` (from `@/components/ui/dropdown-menu`).
-- Remove unused import: `LogOut` from `lucide-vue-next`.
-- Add import: `UserProfileDropdown from '@/components/shared/UserProfileDropdown.vue'`.
-- Replace inline `isActive()` function with `import { useNavActive } from '@/composables/useNavActive'` → `const { isActive } = useNavActive()`.
-- Remove `useRoute()` import (now in composable).
-- Remove `authStore.logout()` call (now in `UserProfileDropdown` directly).
+- Remove inline `<DropdownMenu>`, `<DropdownMenuTrigger>`, `<DropdownMenuContent>`, `<DropdownMenuItem>`s, `<DropdownMenuSeparator>`.
+- Remove unused imports: `DropdownMenu`, `DropdownMenuContent`, `DropdownMenuItem`, `DropdownMenuSeparator`, `DropdownMenuTrigger`, `LogOut`.
+- Add import: `ProfileDropdown from '@/components/shared/ProfileDropdown.vue'`.
+- Remove `useRoute()` import (replaced by `useNavActive()`).
+- Remove `authStore.logout()` call (now in `ProfileDropdown`).
 
-- [x] 3.1 In `resources/app/components/admin/AdminBottomNav.vue`, replace inline Profile `<DropdownMenu>` section with `<UserProfileDropdown>`. Update imports: add `UserProfileDropdown`, remove `DropdownMenu*` components, remove `LogOut` icon. Replace `useRoute()` + `isActive()` with `useNavActive()`.
+- [x] 3.1 In `resources/app/components/admin/AdminBottomNav.vue`, replace inline Profile dropdown with `<ProfileDropdown :active="isActive('profile')" trigger-class="..." label="Profile" />`. Add import, remove unused imports.
 
 ### 3.2 Refactor AdminSidebar.vue
 
@@ -242,29 +210,24 @@ const authStore = useAuthStore()
 
 File: `resources/app/components/public/PublicBottomNav.vue`
 
-Replace the auth actions `<DropdownMenu>` section (lines ~59-102, the `<template v-if>` / `<template v-else>` branches) with:
+Replace the auth actions `<DropdownMenu>` section (lines 56-82) with `<AuthDropdown>`:
 
 ```vue
-<AuthNavDropdown side="top" align="end">
-  <template #trigger="{ label }">
-    <button class="flex flex-1 flex-col items-center justify-center gap-1 py-2 text-xs transition-colors"
-      :class="(isActive('login') || isActive('register') || isActive('profile')) ? 'text-primary' : 'text-muted-foreground hover:text-foreground'">
-      <User class="size-5" />
-      <span>{{ label }}</span>
-    </button>
-  </template>
-</AuthNavDropdown>
+<AuthDropdown
+  side="top"
+  align="end"
+  :active="isActive('login') || isActive('register') || isActive('profile')"
+  trigger-class="flex flex-1 flex-col items-center justify-center gap-1 py-2 text-xs transition-colors"
+/>
 ```
 
-- Remove the inline `<DropdownMenu>`, `<DropdownMenuTrigger>`, `<DropdownMenuContent>`, `<DropdownMenuItem>`s, `<DropdownMenuSeparator>`, and both `<template v-if>` / `<template v-else>` branches.
-- Remove `handleLogout()` function.
-- Remove unused imports: `DropdownMenu`, `DropdownMenuContent`, `DropdownMenuItem`, `DropdownMenuSeparator`, `DropdownMenuTrigger` from `@/components/ui/dropdown-menu`.
-- Remove unused imports: `LogOut` from `lucide-vue-next`.
-- Add import: `AuthNavDropdown from '@/components/shared/AuthNavDropdown.vue'`.
-- Replace inline `isActive()` with `useNavActive()`.
-- Keep `User` icon import (used in trigger slot above).
+- Remove the entire auth `<DropdownMenu>` section (trigger + both guest/authenticated branches).
+- Remove unused imports: `DropdownMenu`, `DropdownMenuContent`, `DropdownMenuItem`, `DropdownMenuSeparator`, `DropdownMenuTrigger`, `LogOut`.
+- Remove unused stores: `useAuthStore`, `useRoute`.
+- Add import: `AuthDropdown from '@/components/shared/AuthDropdown.vue'`.
+- Replace `isActive()` with `useNavActive()`.
 
-- [x] 4.1 In `resources/app/components/public/PublicBottomNav.vue`, replace the entire auth `<DropdownMenu>` section (both guest and authenticated branches) with `<AuthNavDropdown>`. Remove `handleLogout()`. Remove imports: `DropdownMenu*`, `LogOut`. Add import: `AuthNavDropdown`. Replace `isActive()` with `useNavActive()`.
+- [x] 4.1 In `resources/app/components/public/PublicBottomNav.vue`, replace inline auth dropdown with `<AuthDropdown :active="..." trigger-class="..." />`. Add import, remove unused imports.
 
 ### 4.2 Refactor PublicNavbar.vue
 
