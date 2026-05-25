@@ -1,23 +1,11 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
+import { useNavActive } from '@/composables/useNavActive'
 import { useI18n } from '@/composables/useI18n'
-import { Globe, Home, Info, LogOut, User } from 'lucide-vue-next'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+import AuthDropdown from '@/components/shared/AuthDropdown.vue'
+import { Globe, Home, Info, User } from 'lucide-vue-next'
 
-const route = useRoute()
-const authStore = useAuthStore()
 const { t } = useI18n()
-
-function isActive(routeName: string): boolean {
-  return route.name === routeName
-}
+const { isActive } = useNavActive()
 </script>
 
 <template>
@@ -55,47 +43,11 @@ function isActive(routeName: string): boolean {
     </router-link>
 
     <!-- Auth actions (dropdown) -->
-    <DropdownMenu>
-      <DropdownMenuTrigger as-child>
-        <button
-          class="flex flex-1 flex-col items-center justify-center gap-1 py-2 text-xs transition-colors"
-          :class="isActive('login') || isActive('register') || isActive('profile') ? 'text-primary' : 'text-muted-foreground hover:text-foreground'"
-        >
-          <User class="size-5" />
-          <span v-if="!authStore.isAuthenticated">{{ t('landing.nav.signIn') }}</span>
-          <span v-else>{{ authStore.user?.name }}</span>
-        </button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent side="top" align="end" class="w-44">
-        <template v-if="!authStore.isAuthenticated">
-          <DropdownMenuItem as-child>
-            <router-link :to="{ name: 'login' }">
-              <User class="mr-2 size-4" />
-              <span>{{ t('landing.nav.signIn') }}</span>
-            </router-link>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem as-child>
-            <router-link :to="{ name: 'register' }">
-              <span class="mr-2">📝</span>
-              <span>{{ t('landing.nav.signUp') }}</span>
-            </router-link>
-          </DropdownMenuItem>
-        </template>
-        <template v-else>
-          <DropdownMenuItem as-child>
-            <router-link :to="{ name: 'profile' }">
-              <User class="mr-2 size-4" />
-              <span>{{ t('nav.profile') }}</span>
-            </router-link>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem @click="authStore.logout()">
-            <LogOut class="mr-2 size-4" />
-            <span>{{ t('landing.nav.signOut') }}</span>
-          </DropdownMenuItem>
-        </template>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <AuthDropdown
+      side="top"
+      align="end"
+      :active="isActive('login') || isActive('register') || isActive('profile')"
+      trigger-class="flex flex-1 flex-col items-center justify-center gap-1 py-2 text-xs transition-colors"
+    />
   </nav>
 </template>

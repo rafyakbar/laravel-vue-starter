@@ -1,25 +1,13 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
 import { useI18n } from '@/composables/useI18n'
+import { useNavActive } from '@/composables/useNavActive'
 import { useSidebar } from '@/components/ui/sidebar'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Globe, LayoutDashboard, LogOut, Menu, User } from 'lucide-vue-next'
+import ProfileDropdown from '@/components/shared/ProfileDropdown.vue'
+import { Globe, LayoutDashboard, Menu, User } from 'lucide-vue-next'
 
-const route = useRoute()
-const authStore = useAuthStore()
 const { t } = useI18n()
 const { setOpenMobile } = useSidebar()
-
-function isActive(routeName: string): boolean {
-  return route.name === routeName
-}
+const { isActive } = useNavActive()
 </script>
 
 <template>
@@ -54,29 +42,12 @@ function isActive(routeName: string): boolean {
     </button>
 
     <!-- Profile (dropdown popup) -->
-    <DropdownMenu>
-      <DropdownMenuTrigger as-child>
-        <button
-          class="flex flex-1 flex-col items-center justify-center gap-1 py-2 text-xs transition-colors"
-          :class="isActive('profile') ? 'text-primary' : 'text-muted-foreground hover:text-foreground'"
-        >
-          <User class="size-5" />
-          <span>{{ t('nav.profile') }}</span>
-        </button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent side="top" align="end" class="w-44">
-        <DropdownMenuItem as-child>
-          <router-link :to="{ name: 'profile' }">
-            <User class="mr-2 size-4" />
-            <span>{{ t('nav.profile') }}</span>
-          </router-link>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem @click="authStore.logout()">
-          <LogOut class="mr-2 size-4" />
-          <span>{{ t('nav.signOut') }}</span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <ProfileDropdown
+      side="top"
+      align="end"
+      :active="isActive('profile')"
+      trigger-class="flex flex-1 flex-col items-center justify-center gap-1 py-2 text-xs transition-colors"
+      :label="t('nav.profile')"
+    />
   </nav>
 </template>
