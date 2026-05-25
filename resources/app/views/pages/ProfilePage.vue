@@ -5,8 +5,8 @@ import { useI18n } from '@/composables/useI18n'
 import DefaultLayout from '@/views/layouts/DefaultLayout.vue'
 import AdminLayout from '@/views/layouts/AdminLayout.vue'
 import BasicPage from '@/components/shared/BasicPage.vue'
+import UserInitials from '@/components/shared/UserInitials.vue'
 import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 
 const authStore = useAuthStore()
@@ -19,15 +19,6 @@ const signingOut = ref(false)
  */
 const useAdminLayout = () =>
   authStore.user?.permissions?.includes('access-admin-panel') ?? false
-
-function userInitials(name: string): string {
-  return name
-    .split(' ')
-    .map((n) => n[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2)
-}
 
 async function handleSignOut() {
   signingOut.value = true
@@ -45,11 +36,7 @@ async function handleSignOut() {
     <BasicPage :title="t('pages.profile.title')" :description="t('pages.profile.description')">
       <div class="rounded-lg border bg-card p-6">
         <div class="flex items-center gap-4">
-          <Avatar class="size-16">
-            <AvatarFallback class="text-lg">
-              {{ userInitials(authStore.user?.name ?? 'U') }}
-            </AvatarFallback>
-          </Avatar>
+          <UserInitials :name="authStore.user?.name ?? 'U'" size="lg" />
           <div>
             <p class="text-lg font-semibold">{{ authStore.user?.name }}</p>
             <p class="text-sm text-muted-foreground">{{ authStore.user?.email }}</p>
@@ -85,11 +72,7 @@ async function handleSignOut() {
 
         <div class="rounded-lg border bg-[var(--card)] p-6 text-[var(--card-foreground)]">
           <div class="flex items-center gap-4">
-            <Avatar class="size-16">
-              <AvatarFallback class="text-lg">
-                {{ userInitials(authStore.user?.name ?? 'U') }}
-              </AvatarFallback>
-            </Avatar>
+            <UserInitials :name="authStore.user?.name ?? 'U'" size="lg" />
             <div>
               <p class="text-lg font-semibold">{{ authStore.user?.name }}</p>
               <p class="text-sm text-[var(--muted-foreground)]">{{ authStore.user?.email }}</p>

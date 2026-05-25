@@ -25,9 +25,6 @@ const navLinks = [
   { name: 'about', labelKey: 'landing.nav.about' },
 ]
 
-async function handleLogout() {
-  await authStore.logout()
-}
 </script>
 
 <template>
@@ -72,7 +69,7 @@ async function handleLogout() {
               <span class="max-w-24 truncate">{{ authStore.user?.name }}</span>
             </Button>
           </router-link>
-          <Button variant="outline" size="sm" @click="handleLogout">
+          <Button variant="outline" size="sm" @click="authStore.logout()">
             <LogOut class="size-4" />
             {{ t('landing.nav.signOut') }}
           </Button>

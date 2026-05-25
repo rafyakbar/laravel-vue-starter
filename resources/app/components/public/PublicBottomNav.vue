@@ -18,10 +18,6 @@ const { t } = useI18n()
 function isActive(routeName: string): boolean {
   return route.name === routeName
 }
-
-async function handleLogout() {
-  await authStore.logout()
-}
 </script>
 
 <template>
@@ -94,7 +90,7 @@ async function handleLogout() {
             </router-link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem @click="handleLogout()">
+          <DropdownMenuItem @click="authStore.logout()">
             <LogOut class="mr-2 size-4" />
             <span>{{ t('landing.nav.signOut') }}</span>
           </DropdownMenuItem>
