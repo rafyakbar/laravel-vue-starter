@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TokenController;
 use App\Http\Controllers\UserController;
@@ -25,4 +26,10 @@ Route::middleware(['auth:sanctum', 'apply_locale'])->group(function () {
      * Roles
      */
     Route::get('/roles/search', [RoleController::class, 'search'])->middleware('throttle:400,1');
+    Route::resource('roles', RoleController::class)->except(['create', 'edit']);
+
+    /**
+     * Permissions
+     */
+    Route::get('/permissions', [PermissionController::class, 'index']);
 });
