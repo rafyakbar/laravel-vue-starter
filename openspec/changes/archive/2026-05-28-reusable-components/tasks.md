@@ -327,9 +327,9 @@ File: `tests/e2e/tests/user/responsive.spec.ts`
 - [x] 6.5 Run user home tests — verified
 - [x] 6.6 Run user signout tests — verified
 - [x] 6.7 Run guest tests — verified (43 passed)
-- [x] 7.2 Run the complete E2E suite: `npm run test:e2e` — ALL 169 tests pass ✓
-- [ ] 7.3 Run `vendor/bin/pint --dirty --format agent` — verify no PHP formatting issues.
-- [ ] 7.4 Manual verification: open the app in a browser at desktop, tablet, and mobile viewports. Verify:
+- [x] 7.2 Run the complete E2E suite: `npm run test:e2e` — ALL 188 tests pass ✓
+- [x] 7.3 Run `vendor/bin/pint --dirty --format agent` — verify no PHP formatting issues.
+- [x] 7.4 Manual verification: open the app in a browser at desktop, tablet, and mobile viewports. Verify:
   - Landing page: Sign In/Sign Up buttons work (guest), user name + Sign Out work (authenticated)
   - Admin page: bottom nav Profile dropdown opens, sidebar footer user menu works, header user menu works
   - Profile page: avatar displays correct initials for each role
