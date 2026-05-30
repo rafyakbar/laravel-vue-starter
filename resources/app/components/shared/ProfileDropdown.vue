@@ -16,6 +16,7 @@ defineProps<{
   label?: string
   triggerClass?: string
   active?: boolean
+  contentClass?: string
 }>()
 
 const authStore = useAuthStore()
@@ -25,14 +26,16 @@ const { t } = useI18n()
 <template>
   <DropdownMenu>
     <DropdownMenuTrigger as-child>
-      <button
-        :class="[triggerClass || 'flex items-center gap-2', active ? 'text-primary' : 'text-muted-foreground hover:text-foreground']"
-      >
-        <User class="size-5" />
-        <span>{{ label || t('nav.profile') }}</span>
-      </button>
+      <slot name="trigger">
+        <button
+          :class="[triggerClass || 'flex items-center gap-2', active ? 'text-primary' : 'text-muted-foreground hover:text-foreground']"
+        >
+          <User class="size-5" />
+          <span>{{ label || t('nav.profile') }}</span>
+        </button>
+      </slot>
     </DropdownMenuTrigger>
-    <DropdownMenuContent :side="side ?? 'top'" :align="align ?? 'end'" class="w-44">
+    <DropdownMenuContent :side="side ?? 'top'" :align="align ?? 'end'" :class="contentClass || 'w-44'">
       <DropdownMenuItem as-child>
         <router-link :to="{ name: 'profile' }">
           <User class="mr-2 size-4" />

@@ -5,6 +5,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useI18n } from '@/composables/useI18n'
 import { navItems } from '@/components/admin/nav-items'
 import UserInitials from '@/components/shared/UserInitials.vue'
+import ProfileDropdown from '@/components/shared/ProfileDropdown.vue'
 import {
   Sidebar,
   SidebarContent,
@@ -31,11 +32,10 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Badge } from '@/components/ui/badge'
-import { ChevronRight, ChevronUp, Globe, LogOut, User } from 'lucide-vue-next'
+import { ChevronRight, ChevronUp, Globe } from 'lucide-vue-next'
 import { useSidebar } from '@/components/ui/sidebar/utils'
 
 const route = useRoute()
@@ -176,8 +176,8 @@ function isGroupActive(children: { routeName: string }[]): boolean {
     <SidebarFooter>
       <SidebarMenu>
         <SidebarMenuItem>
-          <DropdownMenu>
-            <DropdownMenuTrigger as-child>
+          <ProfileDropdown side="top" content-class="w-(--reka-popper-anchor-width)">
+            <template #trigger>
               <SidebarMenuButton size="lg">
                 <UserInitials :name="authStore.user?.name ?? 'U'" :email="authStore.user?.email" size="sm" />
                 <div class="grid flex-1 text-left text-sm leading-tight">
@@ -186,21 +186,8 @@ function isGroupActive(children: { routeName: string }[]): boolean {
                 </div>
                 <ChevronUp class="ml-auto" />
               </SidebarMenuButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent side="top" class="w-(--reka-popper-anchor-width)">
-              <DropdownMenuItem as-child>
-                <router-link :to="{ name: 'profile' }">
-                  <User class="mr-2 size-4" />
-                  <span>{{ t('nav.profile') }}</span>
-                </router-link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem @click="authStore.logout()">
-                <LogOut class="mr-2 size-4" />
-                <span>{{ t('nav.signOut') }}</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </template>
+          </ProfileDropdown>
         </SidebarMenuItem>
       </SidebarMenu>
     </SidebarFooter>
