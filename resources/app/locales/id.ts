@@ -1,6 +1,22 @@
 import type { Messages } from './en'
 
 const id: Messages = {
+  common: {
+    search: 'Cari...',
+    actions: 'Aksi',
+    cancel: 'Batal',
+    confirm: 'Konfirmasi',
+    save: 'Simpan',
+    delete: 'Hapus',
+    edit: 'Edit',
+    create: 'Buat',
+    previous: 'Sebelumnya',
+    next: 'Berikutnya',
+    paginationInfo: 'Menampilkan {from} sampai {to} dari {total} entri',
+    loading: 'Memuat...',
+    saving: 'Menyimpan...',
+    noData: 'Tidak ada data',
+  },
   nav: {
     site: 'Situs',
     dashboard: 'Dasbor',
@@ -56,8 +72,15 @@ const id: Messages = {
     roles: {
       title: 'Peran & Izin',
       description: 'Kelola peran dan izinnya',
-      comingSoon: 'Segera Hadir',
-      comingSoonText: 'Manajemen peran akan tersedia pada pembaruan mendatang.',
+      createRole: 'Buat Peran',
+      editRole: 'Edit Peran',
+      deleteRole: 'Hapus Peran',
+      deleteRoleConfirm: 'Apakah Anda yakin ingin menghapus peran ini? Tindakan ini tidak dapat dibatalkan.',
+      roleName: 'Nama Peran',
+      permissions: 'Izin',
+      usersCount: 'Pengguna',
+      selectPermissions: 'Pilih izin untuk peran ini',
+      noPermissions: 'Tidak ada izin yang ditetapkan',
     },
     profile: {
       title: 'Profil',

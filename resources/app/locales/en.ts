@@ -1,4 +1,20 @@
 const en = {
+  common: {
+    search: 'Search...',
+    actions: 'Actions',
+    cancel: 'Cancel',
+    confirm: 'Confirm',
+    save: 'Save',
+    delete: 'Delete',
+    edit: 'Edit',
+    create: 'Create',
+    previous: 'Previous',
+    next: 'Next',
+    paginationInfo: 'Showing {from} to {to} of {total} entries',
+    loading: 'Loading...',
+    saving: 'Saving...',
+    noData: 'No data found',
+  },
   nav: {
     site: 'Site',
     dashboard: 'Dashboard',
@@ -54,8 +70,15 @@ const en = {
     roles: {
       title: 'Roles & Permissions',
       description: 'Manage roles and their permissions',
-      comingSoon: 'Coming Soon',
-      comingSoonText: 'Role management will be available in a future update.',
+      createRole: 'Create Role',
+      editRole: 'Edit Role',
+      deleteRole: 'Delete Role',
+      deleteRoleConfirm: 'Are you sure you want to delete this role? This action cannot be undone.',
+      roleName: 'Role Name',
+      permissions: 'Permissions',
+      usersCount: 'Users',
+      selectPermissions: 'Select permissions for this role',
+      noPermissions: 'No permissions assigned',
     },
     profile: {
       title: 'Profile',
