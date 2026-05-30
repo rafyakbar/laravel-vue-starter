@@ -111,6 +111,7 @@ export default defineConfig({
   // Auto-start Laravel dev server when not already running (local dev uses Laragon)
   webServer: {
     command: 'php artisan serve --host=127.0.0.1 --port=8765',
+    cwd: path.resolve(__dirname, '../..'),
     url: 'http://laravel-vue-starter.test',
     reuseExistingServer: true, // always reuse — Laragon is running
     timeout: 30000,
