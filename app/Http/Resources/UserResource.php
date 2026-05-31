@@ -25,6 +25,7 @@ class UserResource extends JsonResource
         // All roles (including superadmin) hold explicit permissions,
         // so getAllPermissions() returns a consistent list for everyone.
         $data['permissions'] = $this->getAllPermissions()->pluck('name');
+        $data['direct_permissions'] = $this->getDirectPermissions()->pluck('name');
         $data['created_at'] = $this->resource->created_at?->diffForHumans();
         $data['updated_at'] = $this->resource->updated_at?->diffForHumans();
 

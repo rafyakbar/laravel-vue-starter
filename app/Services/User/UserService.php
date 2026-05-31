@@ -102,6 +102,7 @@ class UserService
         }
 
         $roles = Data::take($data, 'roles');
+        $permissions = Data::take($data, 'permissions');
         unset($data['email']);
 
         if (isset($data['avatar']) && $data['avatar']) {
@@ -111,6 +112,10 @@ class UserService
 
         if (! empty($roles)) {
             $user->syncRoles($roles);
+        }
+
+        if (array_key_exists('permissions', $data) || isset($permissions)) {
+            $user->syncPermissions($permissions ?? []);
         }
 
         return $user->update($data);

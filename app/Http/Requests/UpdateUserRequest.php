@@ -17,6 +17,8 @@ class UpdateUserRequest extends BaseRequest
             'email' => 'required|email|max:255',
             'roles' => 'required|array',
             'roles.*' => 'exists:roles,name',
+            'permissions' => 'nullable|array',
+            'permissions.*' => 'string|exists:permissions,name',
             'avatar' => 'nullable|image',
             'password' => 'nullable|min:6',
         ];
