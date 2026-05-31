@@ -79,3 +79,73 @@ it('user cannot delete a user', function () {
 
     $this->deleteJson("/api/users/{$target->id}")->assertForbidden();
 });
+
+it('superadmin can assign direct permissions to user', function () {
+    actingAsSuperadmin();
+    $target = User::factory()->create();
+
+    $this->putJson("/api/users/{$target->id}", [
+        'name' => $target->name,
+        'username' => $target->username,
+        'email' => $target->email,
+        'roles' => ['user'],
+        'permissions' => ['edit-profile'],
+    ])->assertSuccessful();
+
+    expect($target->fresh()->hasDirectPermission('edit-profile'))->toBeTrue();
+});
+
+it('superadmin can clear direct permissions with empty array', function () {
+    actingAsSuperadmin();
+    $target = User::factory()->create();
+    $target->givePermissionTo('edit-profile');
+
+    $this->putJson("/api/users/{$target->id}", [
+        'name' => $target->name,
+        'username' => $target->username,
+        'email' => $target->email,
+        'roles' => ['user'],
+        'permissions' => [],
+    ])->assertSuccessful();
+
+    expect($target->fresh()->getDirectPermissions())->toBeEmpty();
+});
+
+it('update without permissions field does not change existing direct permissions', function () {
+    actingAsSuperadmin();
+    $target = User::factory()->create();
+    $target->givePermissionTo('edit-profile');
+
+    $this->putJson("/api/users/{$target->id}", [
+        'name' => 'Updated Name',
+        'username' => $target->username,
+        'email' => $target->email,
+        'roles' => ['user'],
+    ])->assertSuccessful();
+
+    expect($target->fresh()->hasDirectPermission('edit-profile'))->toBeTrue();
+});
+
+it('update with invalid permission name returns 422', function () {
+    actingAsSuperadmin();
+    $target = User::factory()->create();
+
+    $this->putJson("/api/users/{$target->id}", [
+        'name' => $target->name,
+        'username' => $target->username,
+        'email' => $target->email,
+        'roles' => ['user'],
+        'permissions' => ['nonexistent-perm'],
+    ])->assertUnprocessable();
+});
+
+it('UserResource includes direct_permissions on show', function () {
+    actingAsSuperadmin();
+    $target = User::factory()->create();
+    $target->givePermissionTo('edit-profile');
+
+    $this->getJson("/api/users/{$target->id}")
+        ->assertSuccessful()
+        ->assertJsonStructure(['model' => ['direct_permissions']])
+        ->assertJsonPath('model.direct_permissions', ['edit-profile']);
+});
