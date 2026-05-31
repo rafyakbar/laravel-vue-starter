@@ -200,7 +200,7 @@ This launches:
 
 ## 🧪 Testing
 
-### Pest (Backend — 73 tests)
+### Pest
 
 ```bash
 # Run all backend tests
@@ -215,7 +215,7 @@ php artisan test --compact tests/Feature/Authorization/
 
 Covers: authentication flows, user CRUD, role/permission enforcement, avatar upload, API endpoints.
 
-### Playwright (E2E — 169 tests)
+### Playwright
 
 ```bash
 # Run all E2E tests (headless)
