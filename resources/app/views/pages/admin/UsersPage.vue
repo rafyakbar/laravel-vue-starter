@@ -19,10 +19,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Plus, Pencil, Trash2 } from 'lucide-vue-next'
+import { Plus, Pencil, Trash2, KeyRound } from 'lucide-vue-next'
 import { apiGet, apiPost, apiPut, apiDelete, ApiError } from '@/services/api'
+import { useAuthStore } from '@/stores/auth'
 
 const { t } = useI18n()
+const authStore = useAuthStore()
+
+function isCurrentUser(userId: number): boolean {
+  return authStore.user?.id === userId
+}
 
 interface User {
   id: number
@@ -61,8 +67,10 @@ const pagination = ref<{
 const showCreateDialog = ref(false)
 const showEditDialog = ref(false)
 const showDeleteDialog = ref(false)
+const showResetPasswordDialog = ref(false)
 const formLoading = ref(false)
 const deleteLoading = ref(false)
+const resetPasswordLoading = ref(false)
 
 const selectedUser = ref<User | null>(null)
 const form = ref({
@@ -74,6 +82,8 @@ const form = ref({
   permissions: [] as string[],
 })
 const formErrors = ref<Record<string, string[]>>({})
+const resetPasswordForm = ref({ password: '', password_confirmation: '' })
+const resetPasswordErrors = ref<Record<string, string[]>>({})
 
 const columns = computed<Column[]>(() => [
   { key: 'avatar', label: t('pages.users.avatar'), class: 'w-[60px]' },
@@ -174,6 +184,13 @@ function openDeleteDialog(user: User) {
   showDeleteDialog.value = true
 }
 
+function openResetPasswordDialog(user: User) {
+  selectedUser.value = user
+  resetPasswordForm.value = { password: '', password_confirmation: '' }
+  resetPasswordErrors.value = {}
+  showResetPasswordDialog.value = true
+}
+
 function closeCreateDialog() {
   showCreateDialog.value = false
   selectedUser.value = null
@@ -186,6 +203,11 @@ function closeEditDialog() {
 
 function closeDeleteDialog() {
   showDeleteDialog.value = false
+  selectedUser.value = null
+}
+
+function closeResetPasswordDialog() {
+  showResetPasswordDialog.value = false
   selectedUser.value = null
 }
 
@@ -221,16 +243,12 @@ async function submitEdit() {
   formLoading.value = true
   formErrors.value = {}
 
-  const payload: Record<string, any> = {
+  const payload = {
     name: form.value.name,
     username: form.value.username,
     email: form.value.email,
     roles: form.value.roles,
     permissions: form.value.permissions,
-  }
-
-  if (form.value.password) {
-    payload.password = form.value.password
   }
 
   try {
@@ -244,6 +262,32 @@ async function submitEdit() {
     }
   } finally {
     formLoading.value = false
+  }
+}
+
+async function submitResetPassword() {
+  if (!selectedUser.value) return
+
+  resetPasswordLoading.value = true
+  resetPasswordErrors.value = {}
+
+  try {
+    await apiPut(`/api/users/${selectedUser.value.id}`, {
+      name: selectedUser.value.name,
+      username: selectedUser.value.username,
+      email: selectedUser.value.email,
+      roles: selectedUser.value.roles ?? [],
+      password: resetPasswordForm.value.password,
+      password_confirmation: resetPasswordForm.value.password_confirmation,
+    })
+    closeResetPasswordDialog()
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 422) {
+      const data = error.data as { errors?: Record<string, string[]> }
+      resetPasswordErrors.value = data?.errors ?? {}
+    }
+  } finally {
+    resetPasswordLoading.value = false
   }
 }
 
@@ -352,12 +396,17 @@ onMounted(() => {
 
       <template #rowActions="{ item }">
         <div class="flex items-center justify-end gap-1">
-          <Button variant="ghost" size="icon" class="h-8 w-8" @click="openEditDialog(item)">
-            <Pencil class="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon" class="h-8 w-8 text-destructive" @click="openDeleteDialog(item)">
-            <Trash2 class="h-4 w-4" />
-          </Button>
+          <template v-if="!isCurrentUser(item.id)">
+            <Button variant="ghost" size="icon" class="h-8 w-8" :title="t('pages.users.resetPassword')" @click="openResetPasswordDialog(item)">
+              <KeyRound class="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" class="h-8 w-8" @click="openEditDialog(item)">
+              <Pencil class="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" class="h-8 w-8 text-destructive" @click="openDeleteDialog(item)">
+              <Trash2 class="h-4 w-4" />
+            </Button>
+          </template>
         </div>
       </template>
     </DataTable>
@@ -496,20 +545,6 @@ onMounted(() => {
           </div>
 
           <div class="flex flex-col gap-2">
-            <Label for="edit-password">{{ t('pages.users.password') }} ({{ t('pages.users.optional') }})</Label>
-            <Input
-              id="edit-password"
-              v-model="form.password"
-              type="password"
-              :placeholder="t('pages.users.leaveBlankToKeep')"
-              :class="{ 'border-destructive': formErrors.password }"
-            />
-            <p v-if="formErrors.password" class="text-sm text-destructive">
-              {{ formErrors.password[0] }}
-            </p>
-          </div>
-
-          <div class="flex flex-col gap-2">
             <Label>{{ t('pages.users.roles') }}</Label>
             <div class="grid grid-cols-2 gap-2 rounded-md border p-3 max-h-48 overflow-y-auto">
               <div
@@ -576,5 +611,54 @@ onMounted(() => {
       @update:open="closeDeleteDialog"
       @confirm="confirmDelete"
     />
+
+    <!-- Reset Password Dialog -->
+    <Dialog :open="showResetPasswordDialog" @update:open="closeResetPasswordDialog">
+      <DialogContent class="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>{{ t('pages.users.resetPassword') }}</DialogTitle>
+          <DialogDescription>{{ t('pages.users.resetPasswordDescription') }}</DialogDescription>
+        </DialogHeader>
+
+        <div class="flex flex-col gap-4 py-4">
+          <div class="flex flex-col gap-2">
+            <Label for="reset-password">{{ t('pages.users.newPassword') }}</Label>
+            <Input
+              id="reset-password"
+              v-model="resetPasswordForm.password"
+              type="password"
+              :placeholder="t('pages.users.newPassword')"
+              :class="{ 'border-destructive': resetPasswordErrors.password }"
+            />
+            <p v-if="resetPasswordErrors.password" class="text-sm text-destructive">
+              {{ resetPasswordErrors.password[0] }}
+            </p>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <Label for="reset-password-confirm">{{ t('pages.users.confirmPassword') }}</Label>
+            <Input
+              id="reset-password-confirm"
+              v-model="resetPasswordForm.password_confirmation"
+              type="password"
+              :placeholder="t('pages.users.confirmPassword')"
+              :class="{ 'border-destructive': resetPasswordErrors.password_confirmation }"
+            />
+            <p v-if="resetPasswordErrors.password_confirmation" class="text-sm text-destructive">
+              {{ resetPasswordErrors.password_confirmation[0] }}
+            </p>
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button variant="outline" :disabled="resetPasswordLoading" @click="closeResetPasswordDialog">
+            {{ t('common.cancel') }}
+          </Button>
+          <Button :disabled="resetPasswordLoading" @click="submitResetPassword">
+            {{ resetPasswordLoading ? t('common.saving') : t('pages.users.resetPassword') }}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   </BasicPage>
 </template>
