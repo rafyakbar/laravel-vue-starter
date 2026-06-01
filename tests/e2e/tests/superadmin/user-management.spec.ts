@@ -102,4 +102,37 @@ test.describe('Superadmin — User Management', () => {
 
     await expect(page.locator('tbody tr')).not.toHaveCount(0)
   })
+
+  test('current user row does not show edit or delete buttons', async ({ page }) => {
+    // Find the row containing the logged-in superadmin's email
+    const selfRow = page.locator('tbody tr').filter({ hasText: 'superadmin@example.com' })
+    await expect(selfRow).toBeVisible()
+
+    const editBtn = selfRow.locator('button').filter({ has: page.locator('svg.lucide-pencil') })
+    const deleteBtn = selfRow.locator('button').filter({ has: page.locator('svg.lucide-trash-2') })
+
+    await expect(editBtn).not.toBeVisible()
+    await expect(deleteBtn).not.toBeVisible()
+  })
+
+  test('can open reset password dialog', async ({ page }) => {
+    const resetButtons = page.locator('button').filter({ has: page.locator('svg.lucide-key-round') })
+    await resetButtons.first().click()
+
+    await expect(page.getByRole('dialog')).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Reset Password' })).toBeVisible()
+  })
+
+  test('can reset a user password', async ({ page }) => {
+    const resetButtons = page.locator('button').filter({ has: page.locator('svg.lucide-key-round') })
+    await resetButtons.first().click()
+
+    await page.locator('#reset-password').fill('NewPassword123!')
+    await page.locator('#reset-password-confirm').fill('NewPassword123!')
+
+    await page.getByRole('button', { name: 'Reset Password' }).click()
+    await page.waitForLoadState('networkidle')
+
+    await expect(page.getByRole('dialog')).not.toBeVisible()
+  })
 })

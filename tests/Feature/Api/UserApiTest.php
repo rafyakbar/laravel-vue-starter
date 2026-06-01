@@ -149,3 +149,45 @@ it('UserResource includes direct_permissions on show', function () {
         ->assertJsonStructure(['model' => ['direct_permissions']])
         ->assertJsonPath('model.direct_permissions', ['edit-profile']);
 });
+
+it('user list is ordered by newest first', function () {
+    actingAsSuperadmin();
+    $older = User::factory()->create(['created_at' => now()->subMinutes(10)]);
+    $newer = User::factory()->create(['created_at' => now()->subMinutes(5)]);
+
+    $response = $this->getJson('/api/users')->assertSuccessful();
+
+    $ids = collect($response->json('data'))->pluck('id')->values();
+    $newerIndex = $ids->search($newer->id);
+    $olderIndex = $ids->search($older->id);
+
+    expect($newerIndex)->toBeLessThan($olderIndex);
+});
+
+it('reset password with matching confirmation succeeds', function () {
+    actingAsSuperadmin();
+    $target = User::factory()->create();
+
+    $this->putJson("/api/users/{$target->id}", [
+        'name' => $target->name,
+        'username' => $target->username,
+        'email' => $target->email,
+        'roles' => ['user'],
+        'password' => 'NewPassword1!',
+        'password_confirmation' => 'NewPassword1!',
+    ])->assertSuccessful();
+});
+
+it('reset password with mismatched confirmation returns 422', function () {
+    actingAsSuperadmin();
+    $target = User::factory()->create();
+
+    $this->putJson("/api/users/{$target->id}", [
+        'name' => $target->name,
+        'username' => $target->username,
+        'email' => $target->email,
+        'roles' => ['user'],
+        'password' => 'NewPassword1!',
+        'password_confirmation' => 'DifferentPassword!',
+    ])->assertUnprocessable();
+});
