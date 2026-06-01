@@ -57,3 +57,21 @@ The system SHALL validate the optional `permissions` field on user update reques
 #### Scenario: Invalid permission name fails validation
 - **WHEN** the request includes `permissions: ["nonexistent-permission"]`
 - **THEN** the server responds with `422 Unprocessable Entity` indicating the permission does not exist
+
+### Requirement: User list is ordered by newest first by default
+The system SHALL return users ordered by `created_at` descending when no explicit sort is provided.
+
+#### Scenario: Default ordering returns newest user first
+- **WHEN** `GET /api/users` is called without sort params
+- **THEN** the response data is ordered from the most recently created user to the oldest
+
+### Requirement: Password reset requires confirmation
+The system SHALL validate `password_confirmation` when `password` is provided in a user update request.
+
+#### Scenario: Password update with matching confirmation succeeds
+- **WHEN** `PUT /api/users/{id}` is sent with `password` and matching `password_confirmation`
+- **THEN** the server accepts the request and updates the password
+
+#### Scenario: Password update with mismatched confirmation fails validation
+- **WHEN** `PUT /api/users/{id}` is sent with `password` and a non-matching `password_confirmation`
+- **THEN** the server responds with `422 Unprocessable Entity`

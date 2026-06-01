@@ -94,3 +94,38 @@ The system SHALL render the users page correctly at mobile (375x667) and tablet 
 - **WHEN** a superadmin on tablet (768x1024) navigates to `/admin/users`
 - **THEN** the table renders with column headers and user data visible
 - **AND** the bottom nav is NOT visible
+
+### Requirement: Current user cannot edit or delete themselves in the users table
+The system SHALL disable the edit and delete action buttons for the currently authenticated user's row in the users table, while still displaying that row in the list.
+
+#### Scenario: Current user row is visible in the table
+- **WHEN** a superadmin views `/admin/users`
+- **THEN** their own account appears in the table as a normal row
+
+#### Scenario: Edit button is not available for the current user's own row
+- **WHEN** a superadmin views the row belonging to their own account
+- **THEN** the edit button is NOT rendered or is disabled
+
+#### Scenario: Delete button is not available for the current user's own row
+- **WHEN** a superadmin views the row belonging to their own account
+- **THEN** the delete button is NOT rendered or is disabled
+
+### Requirement: Reset password dialog
+The system SHALL provide a separate dialog to reset a user's password, requiring a new password and confirmation. This dialog is distinct from the edit user dialog.
+
+#### Scenario: Open reset password dialog
+- **WHEN** the user clicks the "Reset Password" button on a user row (excluding their own row)
+- **THEN** a dialog opens with two fields: New Password and Confirm Password
+
+#### Scenario: Reset password with matching confirmation succeeds
+- **WHEN** the user fills both fields with matching values and clicks "Reset Password"
+- **THEN** the system sends `PUT /api/users/{id}` with `password` and `password_confirmation`
+- **AND** the dialog closes on success
+
+#### Scenario: Reset password with mismatched confirmation shows error
+- **WHEN** the user fills both fields with non-matching values and submits
+- **THEN** the server returns a 422 and the error is displayed below the confirm field
+
+#### Scenario: Reset password button not shown for current user
+- **WHEN** the current user views their own row
+- **THEN** the reset password button is NOT rendered

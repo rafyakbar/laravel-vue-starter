@@ -37,7 +37,7 @@
 
 - [x] 3b.1 Open `resources/app/locales/en.ts`, add translation keys under `pages.users`: `avatar`, `name`, `email`, `username`, `roles`, `noRoles`, `createUser`, `createUserDescription`, `editUser`, `editUserDescription`, `deleteUser`, `deleteUserConfirm`, `password`, `optional`, `leaveBlankToKeep`, `directPermissions`
 - [x] 3b.2 Open `resources/app/locales/id.ts`, add Indonesian translations for the same keys
-- [ ] 3b.3 Run `npm run build` and ensure zero TypeScript errors
+- [x] 3b.3 Run `npm run build` and ensure zero TypeScript errors
 
 ## 4. Frontend — Manual Verification
 
@@ -95,3 +95,44 @@
 ## 10. Fix Responsive Test
 
 - [x] 10.1 Fix `user-management-responsive.spec.ts` tablet test — sidebar locator is too strict, simplify to just verify bottom nav is hidden on tablet viewport
+
+## 11. Backend — Default Sort & Password Confirmation
+
+- [x] 11.1 Open `app/Services/User/UserService.php`, add `->latest()` as default ordering before pagination in `index()` — only applies when no explicit `sort_by`/`sort` params
+- [x] 11.2 Open `app/Http/Requests/UpdateUserRequest.php`, add `password_confirmation` rule: `required_with:password|same:password|nullable`
+- [x] 11.3 Open `app/Services/User/UserService.php`, update `update()` method to `unset($data['password_confirmation'])` before calling `$user->update($data)` so it doesn't get passed to the model
+- [x] 11.4 Run `vendor/bin/pint --dirty --format agent`
+
+## 12. Backend — Pest Tests for New Requirements
+
+- [x] 12.1 Open `tests/Feature/Api/UserApiTest.php`, add test: `user list is ordered by newest first` — create two users with time gap, assert first item in response is newest
+- [x] 12.2 Add test: `reset password with matching confirmation succeeds` — PUT with `password` and `password_confirmation`, assert 200
+- [x] 12.3 Add test: `reset password with mismatched confirmation returns 422`
+- [x] 12.4 Run `php artisan test --compact --filter=UserApiTest` and ensure all pass
+
+## 13. Frontend — Self-Protection & Reset Password Dialog
+
+- [x] 13.1 Open `resources/app/views/pages/admin/UsersPage.vue`, import `useAuthStore` from `@/stores/auth`; add `const authStore = useAuthStore()` in script setup
+- [x] 13.2 Add computed `isCurrentUser(userId: number): boolean` returning `authStore.user?.id === userId`
+- [x] 13.3 In the DataTable row Actions slot, wrap Edit and Delete buttons with `v-if="!isCurrentUser(user.id)"` so they are hidden for the current user's own row
+- [x] 13.4 Add `showResetPasswordDialog` ref (boolean), `resetPasswordForm` ref `{ password: '', password_confirmation: '' }`, `resetPasswordErrors` ref, `resetPasswordLoading` ref
+- [x] 13.5 Add `openResetPasswordDialog(user)` function — sets `selectedUser`, clears form & errors, opens dialog
+- [x] 13.6 Add `submitResetPassword()` function — PUT `/api/users/{id}` with `{ password, password_confirmation }`, handles 422, closes dialog on success
+- [x] 13.7 Add "Reset Password" button in the Actions slot (next to Edit), hidden with `v-if="!isCurrentUser(user.id)"`, clicking calls `openResetPasswordDialog(user)`
+- [x] 13.8 Add Reset Password `Dialog` component in template with two fields: New Password and Confirm Password, with error display and Save/Cancel buttons
+- [x] 13.9 Add translation keys `resetPassword`, `resetPasswordDescription`, `newPassword`, `confirmPassword` to `resources/app/locales/en.ts` under `pages.users`
+- [x] 13.10 Add same keys in Indonesian to `resources/app/locales/id.ts`
+- [x] 13.11 Run `npm run build` and verify zero TypeScript errors
+
+## 14. E2E Tests — New Requirements
+
+- [x] 14.1 Open `tests/e2e/tests/superadmin/user-management.spec.ts`, add test: `current user row does not show edit or delete buttons` — find the row matching the logged-in user's email, assert edit and delete buttons are NOT visible in that row
+- [x] 14.2 Add test: `can open reset password dialog` — click reset password button on a non-self row, assert dialog visible with heading "Reset Password"
+- [x] 14.3 Add test: `can reset a user password` — open dialog, fill matching passwords, click Save, waitForLoadState, dialog closes
+- [x] 14.4 Run `npx playwright test tests/e2e/tests/superadmin/user-management.spec.ts --config=tests/e2e/playwright.config.ts` — all pass
+
+## 15. Final Verification
+
+- [x] 15.1 Run `php artisan test --compact --filter=UserApiTest` — all pass
+- [x] 15.2 Run `npm run build` — zero errors
+- [x] 15.3 Run `npx playwright test tests/e2e/tests/superadmin/user-management.spec.ts --config=tests/e2e/playwright.config.ts` — all pass
