@@ -1,57 +1,50 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useI18n } from '@/composables/useI18n'
 import DefaultLayout from '@/views/layouts/DefaultLayout.vue'
 import AdminLayout from '@/views/layouts/AdminLayout.vue'
 import BasicPage from '@/components/shared/BasicPage.vue'
-import UserInitials from '@/components/shared/UserInitials.vue'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import AvatarUpload from '@/components/profile/AvatarUpload.vue'
+import ProfileInfoForm from '@/components/profile/ProfileInfoForm.vue'
+import PasswordForm from '@/components/profile/PasswordForm.vue'
 
 const authStore = useAuthStore()
 const { t } = useI18n()
-const signingOut = ref(false)
 
-/**
- * Admin/superadmin see profile inside the admin layout (sidebar + header).
- * Regular users see a simpler standalone layout.
- */
-const useAdminLayout = () =>
+const useAdminLayout = computed(() =>
   authStore.user?.permissions?.includes('access-admin-panel') ?? false
+)
 
-async function handleSignOut() {
-  signingOut.value = true
-  try {
-    await authStore.logout()
-  } finally {
-    signingOut.value = false
-  }
+function onAvatarUploaded() {
+  authStore.fetchUser()
+}
+
+function onAvatarRemoved() {
+  authStore.fetchUser()
+}
+
+function onProfileSaved() {
+  authStore.fetchUser()
 }
 </script>
 
 <template>
   <!-- Admin/superadmin: full admin layout with sidebar -->
-  <AdminLayout v-if="useAdminLayout()">
+  <AdminLayout v-if="useAdminLayout">
     <BasicPage :title="t('pages.profile.title')" :description="t('pages.profile.description')">
-      <div class="rounded-lg border bg-card p-6">
-        <div class="flex items-center gap-4">
-          <UserInitials :name="authStore.user?.name ?? 'U'" size="lg" />
-          <div>
-            <p class="text-lg font-semibold">{{ authStore.user?.name }}</p>
-            <p class="text-sm text-muted-foreground">{{ authStore.user?.email }}</p>
-            <div class="mt-2 flex flex-wrap gap-1">
-              <Badge v-for="role in authStore.user?.roles" :key="role" variant="secondary">
-                {{ role }}
-              </Badge>
-            </div>
-          </div>
+      <div v-if="authStore.user" class="space-y-6">
+        <AvatarUpload
+          :user-id="authStore.user.id"
+          :current-avatar-url="authStore.user.avatar_url"
+          :name="authStore.user.name"
+          @uploaded="onAvatarUploaded"
+          @removed="onAvatarRemoved"
+        />
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <ProfileInfoForm :user="authStore.user" @saved="onProfileSaved" />
+          <PasswordForm />
         </div>
-      </div>
-
-      <div class="flex flex-col items-center justify-center rounded-lg border border-dashed py-12 text-center">
-        <Badge variant="secondary" class="mb-3">{{ t('pages.profile.comingSoon') }}</Badge>
-        <p class="text-sm text-muted-foreground">{{ t('pages.profile.comingSoonText') }}</p>
       </div>
     </BasicPage>
   </AdminLayout>
@@ -60,40 +53,21 @@ async function handleSignOut() {
   <DefaultLayout v-else>
     <div class="min-h-screen px-4 py-12">
       <div class="mx-auto max-w-lg space-y-6">
-        <div class="flex items-center justify-between">
-          <div>
-            <h1 class="text-2xl font-bold tracking-tight">{{ t('pages.profile.title') }}</h1>
-            <p class="mt-1 text-sm text-[var(--muted-foreground)]">{{ t('pages.profile.description') }}</p>
-          </div>
-          <router-link :to="{ name: 'home' }">
-            <Button variant="ghost" size="sm">←</Button>
-          </router-link>
+        <div>
+          <h1 class="text-2xl font-bold tracking-tight">{{ t('pages.profile.title') }}</h1>
+          <p class="mt-1 text-sm text-muted-foreground">{{ t('pages.profile.description') }}</p>
         </div>
 
-        <div class="rounded-lg border bg-[var(--card)] p-6 text-[var(--card-foreground)]">
-          <div class="flex items-center gap-4">
-            <UserInitials :name="authStore.user?.name ?? 'U'" size="lg" />
-            <div>
-              <p class="text-lg font-semibold">{{ authStore.user?.name }}</p>
-              <p class="text-sm text-[var(--muted-foreground)]">{{ authStore.user?.email }}</p>
-              <div class="mt-2 flex flex-wrap gap-1">
-                <Badge v-for="role in authStore.user?.roles" :key="role" variant="secondary">
-                  {{ role }}
-                </Badge>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="flex flex-col items-center justify-center rounded-lg border border-dashed py-12 text-center">
-          <Badge variant="secondary" class="mb-3">{{ t('pages.profile.comingSoon') }}</Badge>
-          <p class="text-sm text-[var(--muted-foreground)]">{{ t('pages.profile.comingSoonText') }}</p>
-        </div>
-
-        <div class="flex justify-center">
-          <Button variant="outline" :disabled="signingOut" @click="handleSignOut">
-            {{ signingOut ? '...' : t('home.signOut') }}
-          </Button>
+        <div v-if="authStore.user" class="space-y-6">
+          <AvatarUpload
+            :user-id="authStore.user.id"
+            :current-avatar-url="authStore.user.avatar_url"
+            :name="authStore.user.name"
+            @uploaded="onAvatarUploaded"
+            @removed="onAvatarRemoved"
+          />
+          <ProfileInfoForm :user="authStore.user" @saved="onProfileSaved" />
+          <PasswordForm />
         </div>
       </div>
     </div>
