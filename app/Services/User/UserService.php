@@ -138,6 +138,16 @@ class UserService
     }
 
     /**
+     * Delete the avatar for the specified user.
+     */
+    public function deleteAvatar(User $user): bool
+    {
+        $user->clearMediaCollection('avatars');
+
+        return true;
+    }
+
+    /**
      * Delete a user.
      */
     public function delete(User $user): bool

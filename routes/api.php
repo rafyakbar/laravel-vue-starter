@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TokenController;
 use App\Http\Controllers\UserController;
@@ -17,9 +18,15 @@ Route::middleware(['auth:sanctum', 'apply_locale'])->group(function () {
     Route::get('/users/auth', AuthController::class);
 
     /**
+     * Profile (self-update)
+     */
+    Route::put('/profile', [ProfileController::class, 'update']);
+
+    /**
      * Users
      */
     Route::put('/users/{user}/avatar', [UserController::class, 'updateAvatar']);
+    Route::delete('/users/{user}/avatar', [UserController::class, 'destroyAvatar']);
     Route::resource('users', UserController::class);
 
     /**

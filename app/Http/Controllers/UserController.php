@@ -89,11 +89,33 @@ class UserController extends Controller
     {
         $this->authorize('edit-profile');
 
+        if ($request->user()->id !== $user->id && ! $request->user()->can('update-users')) {
+            abort(403);
+        }
+
         if ($this->userService->updateAvatar($user, $request->validated())) {
             return $this->responseUpdateSuccess(['record' => $user->fresh()]);
         }
 
         return $this->responseUpdateFail();
+    }
+
+    /**
+     * Remove avatar for the specified user.
+     *
+     * @throws AuthorizationException
+     */
+    public function destroyAvatar(Request $request, User $user): JsonResponse
+    {
+        $this->authorize('edit-profile');
+
+        if ($request->user()->id !== $user->id && ! $request->user()->can('update-users')) {
+            abort(403);
+        }
+
+        $this->userService->deleteAvatar($user);
+
+        return $this->responseDeleteSuccess(['record' => $user->fresh()]);
     }
 
     /**
