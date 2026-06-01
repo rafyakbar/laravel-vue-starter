@@ -21,6 +21,7 @@ class UpdateUserRequest extends BaseRequest
             'permissions.*' => 'string|exists:permissions,name',
             'avatar' => 'nullable|image',
             'password' => 'nullable|min:6',
+            'password_confirmation' => 'nullable|required_with:password|same:password',
         ];
     }
 }

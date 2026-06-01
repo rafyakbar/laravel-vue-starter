@@ -47,6 +47,8 @@ class UserService
 
         if (! empty($data['sort_by']) && ! empty($data['sort'])) {
             $query->orderBy($data['sort_by'], $data['sort']);
+        } else {
+            $query->latest();
         }
 
         return UserResource::collection($query->paginate(10));
@@ -103,7 +105,7 @@ class UserService
 
         $roles = Data::take($data, 'roles');
         $permissions = Data::take($data, 'permissions');
-        unset($data['email']);
+        unset($data['email'], $data['password_confirmation']);
 
         if (isset($data['avatar']) && $data['avatar']) {
             $this->mediaService->replace($data['avatar'], $user, 'avatars');
