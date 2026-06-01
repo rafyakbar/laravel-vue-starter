@@ -29,7 +29,7 @@ test.describe('Admin Role — Restricted Pages', () => {
     await page.waitForLoadState('networkidle')
     // AdminLayout has sidebar with Dashboard link — scope to sidebar content
     await expect(page.locator('[data-sidebar="content"]').getByRole('link', { name: 'Dashboard' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Profile' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Profile', exact: true })).toBeVisible()
   })
 
   test('visiting /login redirects to admin dashboard (guest page guard)', async ({ page }) => {

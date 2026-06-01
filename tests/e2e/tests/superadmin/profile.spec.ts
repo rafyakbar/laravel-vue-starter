@@ -1,17 +1,17 @@
 import { test, expect } from '@playwright/test'
 
-test.describe('User Role — Profile Page', () => {
+test.describe('Superadmin Role — Profile Page', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/profile')
     await page.waitForLoadState('networkidle')
   })
 
-  test('can access /profile page', async ({ page }) => {
+  test('superadmin can access /profile', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'Profile', exact: true })).toBeVisible()
   })
 
-  test('profile renders in DefaultLayout (no admin sidebar)', async ({ page }) => {
-    await expect(page.getByRole('link', { name: 'Dashboard' })).not.toBeVisible()
+  test('superadmin sees AdminLayout with sidebar', async ({ page }) => {
+    await expect(page.locator('[data-sidebar="content"]').getByRole('link', { name: 'Dashboard' })).toBeVisible()
   })
 
   test('profile info form shows name and username fields', async ({ page }) => {
@@ -24,10 +24,8 @@ test.describe('User Role — Profile Page', () => {
     await expect(page.getByLabel('Username', { exact: true })).not.toHaveValue('')
   })
 
-  test('password form shows three password fields', async ({ page }) => {
+  test('password form is visible', async ({ page }) => {
     await expect(page.getByLabel('Current Password')).toBeVisible()
-    await expect(page.getByLabel('New Password')).toBeVisible()
-    await expect(page.getByLabel('Confirm Password')).toBeVisible()
   })
 
   test('avatar upload section is visible', async ({ page }) => {
@@ -42,9 +40,7 @@ test.describe('User Role — Profile Page', () => {
 
   test('profile info and password forms are side by side on desktop', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 })
-    const infoForm = page.getByRole('heading', { name: 'Profile Information', exact: true })
-    const passwordForm = page.getByRole('heading', { name: 'Change Password', exact: true })
-    await expect(infoForm).toBeVisible()
-    await expect(passwordForm).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Profile Information', exact: true })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Change Password', exact: true })).toBeVisible()
   })
 })

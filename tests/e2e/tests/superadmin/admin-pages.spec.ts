@@ -32,7 +32,7 @@ test.describe('Superadmin Role — Admin Pages', () => {
     await page.goto('/profile')
     await page.waitForLoadState('networkidle')
     await expect(page.locator('[data-sidebar="content"]').getByRole('link', { name: 'Dashboard' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Profile' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Profile', exact: true })).toBeVisible()
   })
 
   test('visiting /login redirects to admin dashboard (guest page guard)', async ({ page }) => {
