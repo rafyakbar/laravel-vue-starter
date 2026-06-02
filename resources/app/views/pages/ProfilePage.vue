@@ -8,6 +8,7 @@ import BasicPage from '@/components/shared/BasicPage.vue'
 import AvatarUpload from '@/components/profile/AvatarUpload.vue'
 import ProfileInfoForm from '@/components/profile/ProfileInfoForm.vue'
 import PasswordForm from '@/components/profile/PasswordForm.vue'
+import TwoFactorForm from '@/components/profile/TwoFactorForm.vue'
 
 const authStore = useAuthStore()
 const { t } = useI18n()
@@ -15,6 +16,8 @@ const { t } = useI18n()
 const useAdminLayout = computed(() =>
   authStore.user?.permissions?.includes('access-admin-panel') ?? false
 )
+
+const isTwoFactorEnabled = computed(() => !!authStore.user?.two_factor_confirmed_at)
 
 function onAvatarUploaded() {
   authStore.fetchUser()
@@ -45,6 +48,7 @@ function onProfileSaved() {
           <ProfileInfoForm :user="authStore.user" @saved="onProfileSaved" />
           <PasswordForm />
         </div>
+        <TwoFactorForm :is-two-factor-enabled="isTwoFactorEnabled" />
       </div>
     </BasicPage>
   </AdminLayout>
@@ -68,6 +72,7 @@ function onProfileSaved() {
           />
           <ProfileInfoForm :user="authStore.user" @saved="onProfileSaved" />
           <PasswordForm />
+          <TwoFactorForm :is-two-factor-enabled="isTwoFactorEnabled" />
         </div>
       </div>
     </div>
