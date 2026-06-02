@@ -37,7 +37,10 @@ const onSubmit = handleSubmit(async (values) => {
   submitting.value = true
   try {
     await authStore.login(values)
-    // Redirect based on user permissions, not hardcoded role
+    if (authStore.requiresTwoFactor) {
+      router.push({ name: 'two-factor-challenge' })
+      return
+    }
     const hasAdminAccess = authStore.user?.permissions?.includes('access-admin-panel')
     const redirect = (route.query.redirect as string) || (hasAdminAccess ? '/admin' : '/')
     router.push(redirect)

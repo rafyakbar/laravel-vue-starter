@@ -94,6 +94,12 @@ const routes = [
     component: () => import('@/views/pages/auth/ResetPasswordPage.vue'),
     meta: { guest: true },
   },
+  {
+    path: '/two-factor-challenge',
+    name: 'two-factor-challenge',
+    component: () => import('@/views/pages/auth/TwoFactorChallengePage.vue'),
+    meta: { twoFactorOnly: true },
+  },
 ]
 
 const router = createRouter({

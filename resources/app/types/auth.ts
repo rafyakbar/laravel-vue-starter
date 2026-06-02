@@ -12,6 +12,7 @@ export interface User {
   is_owner: boolean
   roles: string[]
   permissions: string[]
+  two_factor_confirmed_at: string | null
   created_at: string | null
   updated_at: string | null
 }
@@ -38,6 +39,11 @@ export interface ResetPasswordPayload {
   email: string
   password: string
   password_confirmation: string
+}
+
+export interface TwoFactorChallengePayload {
+  code?: string
+  recovery_code?: string
 }
 
 export interface ApiValidationError {
