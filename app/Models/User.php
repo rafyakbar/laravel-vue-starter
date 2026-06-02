@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
@@ -21,6 +22,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     use HasApiTokens, HasFactory, Notifiable;
     use HasRoles;
     use InteractsWithMedia;
+    use TwoFactorAuthenticatable;
 
     /**
      * Allowed search fields.

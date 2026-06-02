@@ -26,6 +26,7 @@ class UserResource extends JsonResource
         // so getAllPermissions() returns a consistent list for everyone.
         $data['permissions'] = $this->getAllPermissions()->pluck('name');
         $data['direct_permissions'] = $this->getDirectPermissions()->pluck('name');
+        $data['two_factor_confirmed_at'] = $this->resource->two_factor_confirmed_at?->toIso8601String();
         $data['created_at'] = $this->resource->created_at?->diffForHumans();
         $data['updated_at'] = $this->resource->updated_at?->diffForHumans();
 
