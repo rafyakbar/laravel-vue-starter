@@ -103,7 +103,7 @@ function isGroupActive(children: { routeName: string }[]): boolean {
                     </SidebarMenuButton>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent side="right" align="start" :side-offset="8" class="w-56">
-                    <DropdownMenuItem v-for="child in item.children" :key="child.routeName" as-child>
+                    <DropdownMenuItem v-for="child in item.children" :key="child.routeName" as-child class="hover:bg-gray-100 dark:hover:bg-white/5">
                       <router-link :to="{ name: child.routeName }" class="flex items-center gap-2">
                         <component :is="child.icon" class="size-4" />
                         <span>{{ t(`nav.${child.i18nKey}` as any) }}</span>
@@ -119,7 +119,9 @@ function isGroupActive(children: { routeName: string }[]): boolean {
                   class="group/collapsible"
                 >
                   <CollapsibleTrigger as-child>
-                    <SidebarMenuButton :is-active="isGroupActive(item.children)">
+                    <SidebarMenuButton :is-active="isGroupActive(item.children)" :class="isGroupActive(item.children)
+                      ? 'bg-brand-50 text-brand-600 dark:bg-brand-500/15 dark:text-brand-500'
+                      : 'text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-white/90'">
                       <component :is="item.icon" />
                       <span>{{ t(`nav.${item.i18nKey}` as any) }}</span>
                       <ChevronRight class="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
@@ -128,7 +130,9 @@ function isGroupActive(children: { routeName: string }[]): boolean {
                   <CollapsibleContent>
                     <SidebarMenuSub>
                       <SidebarMenuSubItem v-for="child in item.children" :key="child.routeName">
-                        <SidebarMenuSubButton as-child :is-active="isActive(child.routeName)">
+                        <SidebarMenuSubButton as-child :is-active="isActive(child.routeName)" :class="isActive(child.routeName)
+                          ? 'text-brand-600 dark:text-brand-500'
+                          : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white/90'">
                           <router-link :to="{ name: child.routeName }">
                             <component :is="child.icon" />
                             <span>{{ t(`nav.${child.i18nKey}` as any) }}</span>
@@ -142,7 +146,9 @@ function isGroupActive(children: { routeName: string }[]): boolean {
 
               <!-- Top-level item (no children) -->
               <SidebarMenuItem v-else>
-                <SidebarMenuButton :tooltip="t(`nav.${item.i18nKey}`)" as-child :is-active="isActive(item.routeName)">
+                <SidebarMenuButton :tooltip="t(`nav.${item.i18nKey}`)" as-child :is-active="isActive(item.routeName)" :class="isActive(item.routeName)
+                  ? 'bg-brand-50 text-brand-600 dark:bg-brand-500/15 dark:text-brand-500'
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-white/90'">
                   <router-link :to="{ name: item.routeName }">
                     <component :is="item.icon" />
                     <span>{{ t(`nav.${item.i18nKey}` as any) }}</span>

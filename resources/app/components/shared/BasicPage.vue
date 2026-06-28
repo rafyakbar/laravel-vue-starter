@@ -10,8 +10,8 @@ defineProps<{
     <!-- Page header -->
     <div class="flex items-start justify-between gap-4">
       <div>
-        <h1 class="text-2xl font-bold tracking-tight">{{ title }}</h1>
-        <p v-if="description" class="mt-1 text-sm text-muted-foreground">
+        <h1 class="text-xl font-semibold text-gray-800 dark:text-white/90">{{ title }}</h1>
+        <p v-if="description" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
           {{ description }}
         </p>
       </div>

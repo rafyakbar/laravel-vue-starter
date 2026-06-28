@@ -24,7 +24,7 @@ const pageTitle = computed(() => {
 </script>
 
 <template>
-  <header class="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b bg-background px-4">
+  <header class="sticky top-0 z-[9999] flex h-16 shrink-0 items-center gap-2 border-b border-gray-200 bg-white px-4 dark:border-gray-800 dark:bg-gray-900">
     <SidebarTrigger class="-ml-1" />
     <Separator orientation="vertical" class="mr-2 h-4" />
 

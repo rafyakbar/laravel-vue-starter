@@ -5,11 +5,10 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { ApiError } from '@/services/api'
 import type { RegisterPayload, ApiValidationError } from '@/types/auth'
-import DefaultLayout from '@/views/layouts/DefaultLayout.vue'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { ChevronLeft } from 'lucide-vue-next'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -67,15 +66,19 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <DefaultLayout>
-    <div class="flex items-center justify-center min-h-screen px-4">
-      <Card class="w-full max-w-md">
-        <CardHeader class="text-center">
-          <CardTitle class="text-2xl">Create Account</CardTitle>
-          <CardDescription>Fill in the details below to register</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form @submit="onSubmit" class="space-y-4">
+  <div class="relative min-h-screen bg-white dark:bg-gray-900">
+    <div class="flex min-h-screen flex-col lg:flex-row">
+      <!-- Left: Form column -->
+      <div class="flex w-full flex-col px-6 py-10 lg:w-1/2 lg:px-16">
+        <router-link :to="{ name: 'home' }" class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white/90">
+          <ChevronLeft class="size-4" /> Back to home
+        </router-link>
+
+        <div class="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-12">
+          <h1 class="text-[30px] font-bold text-gray-800 sm:text-[36px] dark:text-white/90">Create Account</h1>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Fill in the form below to get started</p>
+
+          <form @submit="onSubmit" class="mt-8 space-y-5">
             <FormField v-slot="{ componentField }" name="name">
               <FormItem>
                 <FormLabel>Name</FormLabel>
@@ -151,26 +154,38 @@ const onSubmit = handleSubmit(async (values) => {
               </FormItem>
             </FormField>
 
-            <Button type="submit" class="w-full" :disabled="submitting">
+            <Button type="submit" class="w-full py-3" :disabled="submitting">
               {{ submitting ? 'Creating account...' : 'Create Account' }}
             </Button>
           </form>
 
-          <div class="mt-4 text-center text-sm space-y-2">
-            <p class="text-[var(--muted-foreground)]">
+          <div class="mt-6 text-center text-sm space-y-2">
+            <p class="text-gray-500 dark:text-gray-400">
               Already have an account?
-              <router-link :to="{ name: 'login' }" class="text-[var(--primary)] hover:underline">
+              <router-link :to="{ name: 'login' }" class="text-brand-500 hover:text-brand-600">
                 Sign in
               </router-link>
             </p>
             <p>
-              <router-link :to="{ name: 'home' }" class="text-[var(--muted-foreground)] hover:underline">
+              <router-link :to="{ name: 'home' }" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white/90">
                 ← Back to home
               </router-link>
             </p>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
+
+      <!-- Right: Brand panel (hidden on mobile) -->
+      <div class="relative hidden flex-col items-center justify-center bg-brand-50 p-16 lg:flex lg:w-1/2 dark:bg-brand-500/10">
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0); background-size: 32px 32px;"></div>
+        <div class="relative flex flex-col items-center text-center text-brand-700 dark:text-white/90">
+          <div class="mb-6 flex size-16 items-center justify-center rounded-2xl bg-white shadow-theme-md dark:bg-white/5">
+            <span class="text-2xl font-bold text-brand-500">A</span>
+          </div>
+          <p class="text-2xl font-semibold tracking-tight">Admin Panel</p>
+          <p class="mt-3 max-w-xs text-sm opacity-75">A full-featured SPA admin starter for Laravel + Vue.</p>
+        </div>
+      </div>
     </div>
-  </DefaultLayout>
+  </div>
 </template>

@@ -5,11 +5,10 @@ import { useAuthStore } from '@/stores/auth'
 import { useI18n } from '@/composables/useI18n'
 import { ApiError } from '@/services/api'
 import type { TwoFactorChallengePayload } from '@/types/auth'
-import DefaultLayout from '@/views/layouts/DefaultLayout.vue'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
+import { ChevronLeft } from 'lucide-vue-next'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -53,17 +52,21 @@ function toggleMode() {
 </script>
 
 <template>
-  <DefaultLayout>
-    <div class="flex items-center justify-center min-h-screen px-4">
-      <Card class="w-full max-w-md">
-        <CardHeader class="text-center">
-          <CardTitle class="text-2xl">{{ t('twoFactor.title') }}</CardTitle>
-          <CardDescription>
+  <div class="relative min-h-screen bg-white dark:bg-gray-900">
+    <div class="flex min-h-screen flex-col lg:flex-row">
+      <!-- Left: Form column -->
+      <div class="flex w-full flex-col px-6 py-10 lg:w-1/2 lg:px-16">
+        <router-link :to="{ name: 'home' }" class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white/90">
+          <ChevronLeft class="size-4" /> Back to home
+        </router-link>
+
+        <div class="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-12">
+          <h1 class="text-[30px] font-bold text-gray-800 sm:text-[36px] dark:text-white/90">{{ t('twoFactor.title') }}</h1>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
             {{ useRecovery ? t('twoFactor.recoveryDescription') : t('twoFactor.description') }}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form class="space-y-4" @submit.prevent="onSubmit">
+          </p>
+
+          <form class="mt-8 space-y-5" @submit.prevent="onSubmit">
             <div v-if="!useRecovery" class="flex flex-col gap-2">
               <Label for="two-factor-code">{{ t('twoFactor.codeLabel') }}</Label>
               <Input
@@ -73,9 +76,9 @@ function toggleMode() {
                 inputmode="numeric"
                 autocomplete="one-time-code"
                 placeholder="000000"
-                :class="{ 'border-destructive': codeError }"
+                :class="{ 'border-error-500': codeError }"
               />
-              <p v-if="codeError" class="text-sm text-destructive">{{ codeError }}</p>
+              <p v-if="codeError" class="text-sm text-error-500">{{ codeError }}</p>
             </div>
 
             <div v-else class="flex flex-col gap-2">
@@ -85,27 +88,39 @@ function toggleMode() {
                 v-model="recoveryCode"
                 type="text"
                 autocomplete="off"
-                :class="{ 'border-destructive': codeError }"
+                :class="{ 'border-error-500': codeError }"
               />
-              <p v-if="codeError" class="text-sm text-destructive">{{ codeError }}</p>
+              <p v-if="codeError" class="text-sm text-error-500">{{ codeError }}</p>
             </div>
 
-            <Button type="submit" class="w-full" :disabled="submitting">
+            <Button type="submit" class="w-full py-3" :disabled="submitting">
               {{ submitting ? t('common.saving') : t('twoFactor.submit') }}
             </Button>
           </form>
 
-          <div class="mt-4 text-center text-sm">
+          <div class="mt-6 text-center text-sm">
             <button
               type="button"
-              class="text-[var(--primary)] hover:underline"
+              class="text-brand-500 hover:text-brand-600"
               @click="toggleMode"
             >
               {{ useRecovery ? t('twoFactor.useCode') : t('twoFactor.useRecovery') }}
             </button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
+
+      <!-- Right: Brand panel (hidden on mobile) -->
+      <div class="relative hidden flex-col items-center justify-center bg-brand-50 p-16 lg:flex lg:w-1/2 dark:bg-brand-500/10">
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0); background-size: 32px 32px;"></div>
+        <div class="relative flex flex-col items-center text-center text-brand-700 dark:text-white/90">
+          <div class="mb-6 flex size-16 items-center justify-center rounded-2xl bg-white shadow-theme-md dark:bg-white/5">
+            <span class="text-2xl font-bold text-brand-500">A</span>
+          </div>
+          <p class="text-2xl font-semibold tracking-tight">Admin Panel</p>
+          <p class="mt-3 max-w-xs text-sm opacity-75">A full-featured SPA admin starter for Laravel + Vue.</p>
+        </div>
+      </div>
     </div>
-  </DefaultLayout>
+  </div>
 </template>

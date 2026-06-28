@@ -25,6 +25,7 @@ This project is an SPA admin dashboard built with Laravel 13 (backend) and Vue 3
 - [007_authentication.md](references/007_authentication.md): Authentication, authorization, roles, and permissions
 - [008_deployment.md](references/008_deployment.md): Deployment guide and environment/server configuration
 - [009_performance.md](references/009_performance.md): Performance optimization for local development and production
+- [010_ui_guide.md](references/010_ui_guide.md): UI visual reference for building admin UIs in TailAdmin style (design tokens, layout patterns, component patterns)
 
 ## Links
 
