@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BrowserSessionController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
@@ -21,6 +22,14 @@ Route::middleware(['auth:sanctum', 'apply_locale'])->group(function () {
      * Profile (self-update)
      */
     Route::put('/profile', [ProfileController::class, 'update']);
+
+    /**
+     * Browser sessions — requires web session (SPA cookie auth)
+     */
+    Route::middleware('web')->group(function () {
+        Route::get('/profile/sessions', [BrowserSessionController::class, 'index']);
+        Route::delete('/profile/sessions/others', [BrowserSessionController::class, 'destroyOthers']);
+    });
 
     /**
      * Users
