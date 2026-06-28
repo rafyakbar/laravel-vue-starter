@@ -2,12 +2,12 @@ import { test, expect } from '@playwright/test'
 
 test.describe('Admin Role — Profile Page', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/profile')
+    await page.goto('/my-profile')
     await page.waitForLoadState('networkidle')
   })
 
-  test('admin can access /profile', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: 'Profile', exact: true })).toBeVisible()
+  test('admin can access /my-profile', async ({ page }) => {
+    await expect(page.getByRole('heading', { name: 'My Profile', exact: true })).toBeVisible()
   })
 
   test('admin sees AdminLayout with sidebar', async ({ page }) => {
@@ -24,6 +24,11 @@ test.describe('Admin Role — Profile Page', () => {
     await expect(page.getByLabel('Username', { exact: true })).not.toHaveValue('')
   })
 
+  test('profile info form shows read-only email field', async ({ page }) => {
+    await expect(page.getByLabel('Email', { exact: true })).toBeVisible()
+    await expect(page.getByLabel('Email', { exact: true })).toBeDisabled()
+  })
+
   test('password form is visible', async ({ page }) => {
     await expect(page.getByLabel('Current Password')).toBeVisible()
   })
@@ -38,9 +43,25 @@ test.describe('Admin Role — Profile Page', () => {
     await expect(fileInput).toBeAttached()
   })
 
-  test('profile info and password forms are side by side on desktop', async ({ page }) => {
+  test('Personal Information and Password sections are visible on desktop', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 })
-    await expect(page.getByRole('heading', { name: 'Profile Information', exact: true })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Change Password', exact: true })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Personal Information', exact: true })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Password', exact: true })).toBeVisible()
+  })
+
+  test('browser sessions section heading is visible', async ({ page }) => {
+    await expect(page.getByRole('heading', { name: 'Browser Sessions', exact: true })).toBeVisible()
+  })
+
+  test('log out other browser sessions button is visible', async ({ page }) => {
+    await expect(page.getByRole('button', { name: 'Log Out Other Browser Sessions' })).toBeVisible()
+  })
+
+  test('2FA Enable button is visible when 2FA not enabled', async ({ page }) => {
+    await expect(page.getByRole('button', { name: 'Enable' })).toBeVisible()
+  })
+
+  test('2FA explanation text is visible when 2FA not enabled', async ({ page }) => {
+    await expect(page.getByText('You have not enabled two-factor authentication.')).toBeVisible()
   })
 })

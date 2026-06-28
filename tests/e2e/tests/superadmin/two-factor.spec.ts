@@ -12,28 +12,30 @@ import { test, expect } from '@playwright/test'
  */
 test.describe('Superadmin — Two-Factor Authentication', () => {
   test('can see 2FA section on profile page', async ({ page }) => {
-    await page.goto('/profile')
+    await page.goto('/my-profile')
     await page.waitForLoadState('networkidle')
 
-    await expect(page.getByRole('heading', { name: 'Two-Factor Authentication' })).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Enable Two-Factor Authentication' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Two-Factor Authentication', exact: true })).toBeVisible()
+    // New disabled state shows "Enable" button and explanation paragraph
+    await expect(page.getByRole('button', { name: 'Enable' })).toBeVisible()
+    await expect(page.getByText('You have not enabled two-factor authentication.')).toBeVisible()
   })
 
   test('can start 2FA enable flow', async ({ page }) => {
-    await page.goto('/profile')
+    await page.goto('/my-profile')
     await page.waitForLoadState('networkidle')
 
-    await page.getByRole('button', { name: 'Enable Two-Factor Authentication' }).click()
+    await page.getByRole('button', { name: 'Enable' }).click()
 
     await expect(page.locator('#tfa-confirm-password')).toBeVisible()
     await expect(page.locator('p.text-sm.font-medium').filter({ hasText: 'Confirm your password' })).toBeVisible()
   })
 
   test('password confirmation advances to setup step', async ({ page }) => {
-    await page.goto('/profile')
+    await page.goto('/my-profile')
     await page.waitForLoadState('networkidle')
 
-    await page.getByRole('button', { name: 'Enable Two-Factor Authentication' }).click()
+    await page.getByRole('button', { name: 'Enable' }).click()
     await page.locator('#tfa-confirm-password').fill('123123')
     await page.getByRole('button', { name: 'Confirm Password' }).click()
     await page.waitForLoadState('networkidle')
@@ -42,10 +44,10 @@ test.describe('Superadmin — Two-Factor Authentication', () => {
   })
 
   test('can see manual secret key during setup', async ({ page }) => {
-    await page.goto('/profile')
+    await page.goto('/my-profile')
     await page.waitForLoadState('networkidle')
 
-    await page.getByRole('button', { name: 'Enable Two-Factor Authentication' }).click()
+    await page.getByRole('button', { name: 'Enable' }).click()
     await page.locator('#tfa-confirm-password').fill('123123')
     await page.getByRole('button', { name: 'Confirm Password' }).click()
     await page.waitForLoadState('networkidle')
@@ -57,10 +59,10 @@ test.describe('Superadmin — Two-Factor Authentication', () => {
   })
 
   test('wrong password shows error on confirm step', async ({ page }) => {
-    await page.goto('/profile')
+    await page.goto('/my-profile')
     await page.waitForLoadState('networkidle')
 
-    await page.getByRole('button', { name: 'Enable Two-Factor Authentication' }).click()
+    await page.getByRole('button', { name: 'Enable' }).click()
     await page.locator('#tfa-confirm-password').fill('wrongpassword')
     await page.getByRole('button', { name: 'Confirm Password' }).click()
     await page.waitForLoadState('networkidle')
@@ -70,14 +72,14 @@ test.describe('Superadmin — Two-Factor Authentication', () => {
   })
 
   test('cancel returns to disabled state', async ({ page }) => {
-    await page.goto('/profile')
+    await page.goto('/my-profile')
     await page.waitForLoadState('networkidle')
 
-    await page.getByRole('button', { name: 'Enable Two-Factor Authentication' }).click()
+    await page.getByRole('button', { name: 'Enable' }).click()
     await expect(page.locator('#tfa-confirm-password')).toBeVisible()
 
     await page.getByRole('button', { name: 'Cancel' }).click()
 
-    await expect(page.getByRole('button', { name: 'Enable Two-Factor Authentication' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Enable' })).toBeVisible()
   })
 })

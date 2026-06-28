@@ -25,11 +25,11 @@ test.describe('Admin Role — Restricted Pages', () => {
   })
 
   test('profile renders inside AdminLayout (sidebar visible)', async ({ page }) => {
-    await page.goto('/profile')
+    await page.goto('/my-profile')
     await page.waitForLoadState('networkidle')
     // AdminLayout has sidebar with Dashboard link — scope to sidebar content
     await expect(page.locator('[data-sidebar="content"]').getByRole('link', { name: 'Dashboard' })).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Profile', exact: true })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'My Profile', exact: true })).toBeVisible()
   })
 
   test('visiting /login redirects to admin dashboard (guest page guard)', async ({ page }) => {

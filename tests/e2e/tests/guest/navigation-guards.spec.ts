@@ -22,10 +22,15 @@ test.describe('Guest Navigation Guards', () => {
     expect(page.url()).toContain('redirect')
   })
 
-  test('visiting /profile redirects to login with redirect param', async ({ page }) => {
-    await page.goto('/profile')
+  test('visiting /my-profile redirects to login with redirect param', async ({ page }) => {
+    await page.goto('/my-profile')
     await expect(page).toHaveURL(/\/login/)
     expect(page.url()).toContain('redirect')
+  })
+
+  test('visiting /profile (old URL) also redirects to login', async ({ page }) => {
+    await page.goto('/profile')
+    await expect(page).toHaveURL(/\/login/)
   })
 
   test('visiting /admin/users redirects to login', async ({ page }) => {

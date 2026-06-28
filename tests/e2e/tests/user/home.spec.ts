@@ -27,9 +27,9 @@ test.describe('User Role — Home Page', () => {
     await expect(navbar.getByRole('button', { name: 'Admin' })).not.toBeVisible()
   })
 
-  test('profile link navigates to /profile', async ({ page }) => {
+  test('profile link navigates to /my-profile', async ({ page }) => {
     await page.locator('[data-slot="public-navbar"]').getByRole('button', { name: /E2E User/ }).click()
-    await expect(page).toHaveURL('/profile')
+    await expect(page).toHaveURL('/my-profile')
   })
 
   test('shows landing page content', async ({ page }) => {

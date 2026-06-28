@@ -75,7 +75,7 @@ test.describe('Guest Landing Page', () => {
   })
 
   test('visiting /profile redirects to login', async ({ page }) => {
-    await page.goto('/profile')
+    await page.goto('/my-profile')
     await expect(page).toHaveURL(/\/login/)
   })
 })

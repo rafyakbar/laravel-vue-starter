@@ -36,7 +36,7 @@ test.describe('User Mobile Viewport (375x667)', () => {
     const bottomNav = page.locator('nav.md\\:hidden')
     await bottomNav.getByRole('button', { name: /E2E User/ }).click()
     await page.getByRole('menuitem', { name: 'Profile' }).click()
-    await expect(page).toHaveURL('/profile')
+    await expect(page).toHaveURL('/my-profile')
   })
 
   test('Admin button is NOT visible anywhere on mobile for user role', async ({ page }) => {
@@ -88,7 +88,7 @@ test.describe('User Tablet Viewport (769x1024)', () => {
     await page.waitForLoadState('networkidle')
     const navbar = page.locator('[data-slot="public-navbar"]')
     await navbar.getByRole('button', { name: /E2E User/ }).click()
-    await expect(page).toHaveURL('/profile')
+    await expect(page).toHaveURL('/my-profile')
   })
 })
 
