@@ -63,7 +63,7 @@ const navLinks = [
           </router-link>
         </template>
         <template v-else>
-          <router-link :to="{ name: 'profile' }">
+          <router-link :to="{ name: 'my-profile' }">
             <Button variant="ghost" size="sm" class="gap-2">
               <User class="size-4" />
               <span class="max-w-24 truncate">{{ authStore.user?.name }}</span>

@@ -50,7 +50,7 @@ const { t } = useI18n()
       </template>
       <template v-else>
         <DropdownMenuItem as-child>
-          <router-link :to="{ name: 'profile' }">
+          <router-link :to="{ name: 'my-profile' }">
             <User class="mr-2 size-4" />
             <span>{{ t('nav.profile') }}</span>
           </router-link>

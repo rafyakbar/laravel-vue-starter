@@ -37,7 +37,7 @@ const { t } = useI18n()
     </DropdownMenuTrigger>
     <DropdownMenuContent :side="side ?? 'top'" :align="align ?? 'end'" :class="contentClass || 'w-44'">
       <DropdownMenuItem as-child>
-        <router-link :to="{ name: 'profile' }">
+        <router-link :to="{ name: 'my-profile' }">
           <User class="mr-2 size-4" />
           <span>{{ t('nav.profile') }}</span>
         </router-link>

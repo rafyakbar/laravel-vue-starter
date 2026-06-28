@@ -47,48 +47,42 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <div class="rounded-lg border bg-card p-6 space-y-4">
-    <div>
-      <h3 class="text-base font-semibold">{{ t('pages.profile.passwordTitle') }}</h3>
-      <p class="text-sm text-muted-foreground">{{ t('pages.profile.passwordDescription') }}</p>
+  <form class="space-y-4" @submit="onSubmit">
+    <FormField v-slot="{ componentField }" name="current_password">
+      <FormItem>
+        <FormLabel>{{ t('pages.profile.currentPassword') }}</FormLabel>
+        <FormControl>
+          <Input type="password" v-bind="componentField" autocomplete="current-password" />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+
+    <FormField v-slot="{ componentField }" name="password">
+      <FormItem>
+        <FormLabel>{{ t('pages.profile.newPassword') }}</FormLabel>
+        <FormControl>
+          <Input type="password" v-bind="componentField" autocomplete="new-password" />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+
+    <FormField v-slot="{ componentField }" name="password_confirmation">
+      <FormItem>
+        <FormLabel>{{ t('pages.profile.confirmPassword') }}</FormLabel>
+        <FormControl>
+          <Input type="password" v-bind="componentField" autocomplete="new-password" />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+
+    <div class="flex items-center gap-3">
+      <Button type="submit" :disabled="isSubmitting">
+        {{ isSubmitting ? t('common.saving') : t('pages.profile.updatePassword') }}
+      </Button>
+      <p v-if="successMessage" class="text-sm text-green-600 dark:text-green-400">{{ successMessage }}</p>
     </div>
-    <form class="space-y-4" @submit="onSubmit">
-      <FormField v-slot="{ componentField }" name="current_password">
-        <FormItem>
-          <FormLabel>{{ t('pages.profile.currentPassword') }}</FormLabel>
-          <FormControl>
-            <Input type="password" v-bind="componentField" autocomplete="current-password" />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      </FormField>
-
-      <FormField v-slot="{ componentField }" name="password">
-        <FormItem>
-          <FormLabel>{{ t('pages.profile.newPassword') }}</FormLabel>
-          <FormControl>
-            <Input type="password" v-bind="componentField" autocomplete="new-password" />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      </FormField>
-
-      <FormField v-slot="{ componentField }" name="password_confirmation">
-        <FormItem>
-          <FormLabel>{{ t('pages.profile.confirmPassword') }}</FormLabel>
-          <FormControl>
-            <Input type="password" v-bind="componentField" autocomplete="new-password" />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      </FormField>
-
-      <div class="flex items-center gap-3">
-        <Button type="submit" :disabled="isSubmitting">
-          {{ isSubmitting ? t('pages.profile.saving') : t('pages.profile.saveChanges') }}
-        </Button>
-        <p v-if="successMessage" class="text-sm text-green-600 dark:text-green-400">{{ successMessage }}</p>
-      </div>
-    </form>
-  </div>
+  </form>
 </template>

@@ -66,7 +66,11 @@ const routes = [
   },
   {
     path: '/profile',
-    name: 'profile',
+    redirect: '/my-profile',
+  },
+  {
+    path: '/my-profile',
+    name: 'my-profile',
     component: () => import('@/views/pages/ProfilePage.vue'),
     meta: { requiresAuth: true, titleKey: 'breadcrumb.profile' },
   },

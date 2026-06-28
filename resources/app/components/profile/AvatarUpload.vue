@@ -9,6 +9,7 @@ const props = defineProps<{
   userId: number
   currentAvatarUrl?: string | null
   name?: string
+  compact?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -98,7 +99,8 @@ async function removeAvatar() {
 </script>
 
 <template>
-  <div class="rounded-lg border bg-card p-6 space-y-4">
+  <!-- Standalone card mode (default) -->
+  <div v-if="!compact" class="rounded-lg border bg-card p-6 space-y-4">
     <div>
       <h3 class="text-base font-semibold">{{ t('pages.profile.avatarTitle') }}</h3>
       <p class="text-sm text-muted-foreground">{{ t('pages.profile.avatarDescription') }}</p>
@@ -126,6 +128,41 @@ async function removeAvatar() {
           {{ removing ? t('pages.profile.saving') : t('pages.profile.removeAvatar') }}
         </Button>
       </div>
+    </div>
+
+    <p v-if="errorMessage" class="text-sm text-destructive">{{ errorMessage }}</p>
+
+    <input
+      ref="fileInput"
+      type="file"
+      accept="image/*"
+      class="hidden"
+      @change="onFileSelected"
+    />
+  </div>
+
+  <!-- Compact mode: avatar + buttons only, no card wrapper -->
+  <div v-else class="flex flex-col items-center gap-3">
+    <Avatar class="size-20">
+      <AvatarImage v-if="previewUrl" :src="previewUrl" :alt="name ?? 'Avatar'" />
+      <AvatarFallback class="text-2xl font-medium">{{ initials(name) }}</AvatarFallback>
+    </Avatar>
+
+    <div class="flex flex-wrap gap-2 justify-center">
+      <Button type="button" variant="outline" size="sm" :disabled="uploading || removing" @click="triggerFileInput">
+        {{ uploading ? t('pages.profile.saving') : (previewUrl ? t('pages.profile.changeAvatar') : t('pages.profile.uploadAvatar')) }}
+      </Button>
+
+      <Button
+        v-if="previewUrl"
+        type="button"
+        variant="ghost"
+        size="sm"
+        :disabled="uploading || removing"
+        @click="removeAvatar"
+      >
+        {{ removing ? t('pages.profile.saving') : t('pages.profile.removeAvatar') }}
+      </Button>
     </div>
 
     <p v-if="errorMessage" class="text-sm text-destructive">{{ errorMessage }}</p>

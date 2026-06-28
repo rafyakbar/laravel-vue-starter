@@ -44,38 +44,45 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <div class="rounded-lg border bg-card p-6 space-y-4">
-    <div>
-      <h3 class="text-base font-semibold">{{ t('pages.profile.infoTitle') }}</h3>
-      <p class="text-sm text-muted-foreground">{{ t('pages.profile.infoDescription') }}</p>
+  <form class="space-y-4" @submit="onSubmit">
+    <FormField v-slot="{ componentField }" name="name">
+      <FormItem>
+        <FormLabel>{{ t('pages.profile.name') }}</FormLabel>
+        <FormControl>
+          <Input type="text" v-bind="componentField" autocomplete="name" />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+
+    <FormField v-slot="{ componentField }" name="username">
+      <FormItem>
+        <FormLabel>{{ t('pages.profile.username') }}</FormLabel>
+        <FormControl>
+          <Input type="text" v-bind="componentField" autocomplete="username" />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+
+    <div class="space-y-2">
+      <label for="profile-email" class="text-sm font-medium leading-none">
+        {{ t('pages.profile.email') }}
+      </label>
+      <Input
+        id="profile-email"
+        type="email"
+        :value="props.user.email"
+        disabled
+        class="cursor-not-allowed opacity-60"
+      />
     </div>
-    <form class="space-y-4" @submit="onSubmit">
-      <FormField v-slot="{ componentField }" name="name">
-        <FormItem>
-          <FormLabel>{{ t('pages.profile.name') }}</FormLabel>
-          <FormControl>
-            <Input type="text" v-bind="componentField" autocomplete="name" />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      </FormField>
 
-      <FormField v-slot="{ componentField }" name="username">
-        <FormItem>
-          <FormLabel>{{ t('pages.profile.username') }}</FormLabel>
-          <FormControl>
-            <Input type="text" v-bind="componentField" autocomplete="username" />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      </FormField>
-
-      <div class="flex items-center gap-3">
-        <Button type="submit" :disabled="isSubmitting">
-          {{ isSubmitting ? t('pages.profile.saving') : t('pages.profile.saveChanges') }}
-        </Button>
-        <p v-if="successMessage" class="text-sm text-green-600 dark:text-green-400">{{ successMessage }}</p>
-      </div>
-    </form>
-  </div>
+    <div class="flex items-center gap-3">
+      <Button type="submit" :disabled="isSubmitting">
+        {{ isSubmitting ? t('common.saving') : t('pages.profile.updateProfile') }}
+      </Button>
+      <p v-if="successMessage" class="text-sm text-green-600 dark:text-green-400">{{ successMessage }}</p>
+    </div>
+  </form>
 </template>
