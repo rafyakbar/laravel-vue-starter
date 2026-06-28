@@ -108,6 +108,10 @@
   --text-theme-sm--line-height: 20px;
   --text-theme-xs: 12px;
   --text-theme-xs--line-height: 18px;
+
+  /* Z-index tokens (TailAdmin 5-tier architecture) */
+  --z-popover: 10000;   /* dropdown, popover, tooltip — above header, below modal */
+  --z-modal: 99999;     /* dialog, sheet, modal — per TailAdmin spec */
 }
 
 /*
